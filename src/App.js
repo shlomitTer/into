@@ -1,9 +1,11 @@
 import './App.css';
 import AppRoutes from './appRoutes';
+
+
 function App() {
   return (
     <div>
-      <AppRoutes/>
+      <AppRoutes />
     </div>
   );
 }
