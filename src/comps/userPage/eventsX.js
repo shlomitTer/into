@@ -8,7 +8,7 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import PeopleIcon from '@mui/icons-material/People';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 
-import ProgressBar from '../events/progressBar';
+import ProgressBar from '../eventPages/progressBar';
 import { colors } from '../../theme/theme';
 import Plus from '../buttons/plus';
 

@@ -10,6 +10,7 @@ import TasksBoard from './tasksBoard'
 
 import { getCurrentEvent } from '../../features/slices/eventsSlice';
 import { getCurrentEventTasks } from '../../features/slices/tasksSlice';
+import Details from './details';
 
 export default function EventBoard() {
 
@@ -33,22 +34,26 @@ export default function EventBoard() {
 
 
   return (
-    <Container maxWidth='xl'
-      sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
+    <Container maxWidth='xl' >
+      <Grid container spacing={2}
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-evenly',
+          // justifyItems: 'center',
+          m: 2
+        }}>
 
-      }}>
-      <Grid item md={4} xs={11}>
-        <DashBoard event={currentEvent} />
-      </Grid>
-      <Grid item md={5} xs={11} >
-        <TasksBoard tasks={currentEventTasks} />
-      </Grid>
+        <Grid item md={9} xs={11} mt={4}>
+          <Details />
+          <TasksBoard tasks={currentEventTasks} />
+        </Grid>
 
-      <Grid item md={3} xs={11} >
-        <ParticipantsBoard users={usersOfCurrentEvent} />
+
+        <Grid item md={3} xs={11}>
+          <ParticipantsBoard users={usersOfCurrentEvent} />
+        </Grid>
+
       </Grid>
     </Container>
   )

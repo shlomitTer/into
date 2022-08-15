@@ -3,43 +3,13 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import React from 'react'
 
 import '../../App.css'
+import { stringAvatar } from '../../features/functions/avatarStringColor'
 export default function ParticipantsBoard({ users }) {
 
-  function stringToColor(string) {
-    let hash = 0;
-    let i;
 
-    /* eslint-disable no-bitwise */
-    for (i = 0; i < string.length; i += 1) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = '#';
-
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-    }
-    /* eslint-enable no-bitwise */
-
-    return color;
-  }
-
-  function stringAvatar(name) {
-    // console.log(name);
-
-    let names = name.split(' ')
-    let shortName = name.match(/\b(\w)/g) ? name.match(/\b(\w)/g).join('').toUpperCase() : '-';
-    return {
-      sx: {
-        bgcolor: stringToColor(name),
-      },
-      children: shortName,
-    };
-  }
 
   return (
-    <Container sx={{ bgcolor: '#ffff', boxShadow: 1, borderRadius: 2, paddingTop: 5, minHeight: '95vh' }}>
+    <Grid item sx={{ bgcolor: '#ffff', boxShadow: 1, borderRadius: 2, padding: 2, minHeight: '95vh' }}>
       <Grid item>
         <Typography variant='h5'>Participants<IconButton><AddBoxOutlinedIcon /></IconButton></Typography>
 
@@ -72,6 +42,6 @@ export default function ParticipantsBoard({ users }) {
 
         ))}
       </Grid>
-    </Container >
+    </Grid >
   )
 }

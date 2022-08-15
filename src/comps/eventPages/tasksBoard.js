@@ -1,45 +1,89 @@
 import React from 'react'
-import { Grid, IconButton, Typography, Box, Divider } from '@mui/material'
+import { Grid, IconButton, Typography, Box, Divider, AvatarGroup, Avatar } from '@mui/material'
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { Container } from '@mui/system';
+import { stringAvatar } from '../../features/functions/avatarStringColor'
+import { shorten_a_string } from '../../features/functions/string'
+import ProgressBar from './progressBar';
 
 export default function TasksBoard({ tasks }) {
   console.log(tasks);
   return (
     <Grid item sx={{ paddingTop: 5 }}>
-      <Typography variant='h5'>Tasks<IconButton><AddBoxOutlinedIcon /></IconButton></Typography>
-      {tasks && tasks.map(task => (
-        <Grid item
-          sx={{
-            bgcolor: 'white',
-            my: 2,
-            display: 'flex',
-            flexWrap: 'wrap',
-            padding: 2,
-            boxShadow: 1,
-            borderRadius: 2
-          }}>
-          <Grid item xs={2}><AddBoxOutlinedIcon /></Grid>
-          <Grid item xs={8}>
-            <Typography variant='h6'>{task.title}</Typography>
-            <Typography variant='body1'>{task.description}</Typography>
-            <Grid item>
-              <Typography>{task.date}</Typography>
-              <Divider orientation="vertical" variant="middle" flexItem />
-              <Typography sx={{ pt: 1, display: 'inline' }}>{task.user_id.name}</Typography>
-              <Divider orientation="vertical" variant="middle" flexItem />
 
-              {/* לשנות את המודל לאדם אחד למשימה ולשנות פה לאחראי ולא ליוצר */}
-              <AccessTimeIcon sx={{ display: 'inline', fontSize: 36 }} />
-              <Typography variant="body1" sx={{ pt: 1, display: 'inline' }}>23 Days left</Typography>
+      <Grid item>
+        <Typography variant='h5'>Tasks
+          <IconButton>
+            <AddBoxOutlinedIcon /></IconButton>
+        </Typography>
+      </Grid>
+
+      <Grid item
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          justifyItems: 'center',
+
+        }}>
+        {tasks && tasks.map(task => (
+          <Box
+            sx={{
+              width: '32%',
+              height: '250px',
+              bgcolor: 'white',
+              p: 2,
+              mb: 2,
+              boxShadow: 1,
+              borderRadius: 2,
+              justifyContent: 'space-between',
+              justifyItems: 'center',
+            }}>
+            <Grid item sx={{
+              display: 'flex',
+              flexWrap: 'center'
+            }}>
+              <Grid item xs={8}>
+                <Typography variant='h6' >{task.title}</Typography>
+              </Grid>
+
+              <Grid item xs={4} textAlign={'center'} sx={{ pt: 1 }}>
+                <AccessTimeIcon />
+                <Typography component={'p'} fontSize={'12px'}>23 Days left</Typography>
+              </Grid>
             </Grid>
-          </Grid>
 
-        </Grid>
-      ))
-      }
+            <Grid item sx={{
+              height: '125px'
+            }}>
+              <Typography variant='body1'>{task.description} hh</Typography>
+            </Grid>
+            <Grid item sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyItems: 'center',
+            }}>
+              <Grid item xs={3}>
 
+                <AvatarGroup max={1}>
+                  {task.usersId_arr && task.usersId_arr.map(user => (
+
+                    <Avatar key={user._id} {...stringAvatar(user?.name)} ></Avatar>
+                  ))}
+                </AvatarGroup>
+              </Grid>
+
+              <Grid item xs={8} sx={{ my: 'auto' }}>
+                <ProgressBar />
+              </Grid>
+
+            </Grid>
+          </Box>
+        ))
+        }
+
+      </Grid >
     </Grid >
-
   )
 }
