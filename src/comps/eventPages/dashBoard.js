@@ -1,39 +1,35 @@
-import { Grid } from '@mui/material'
 import React from 'react'
-import Details from './details'
-import Chart from './chart'
+import { Grid, Typography } from '@mui/material'
+import { createTheme, responsiveFontSizes, ThemeProvider, } from '@mui/material/styles';
+let theme = createTheme();
+theme = responsiveFontSizes(theme);
 
 export default function DashBoard({ event }) {
   return (
     <Grid container
       sx={{
-        // display: 'flex',
-        flexWrap: 'wrap',
-        minHeight: '95vh'
+        mt: 2,
+        boxShadow: 1,
+        bgcolor: 'white',
+        borderRadius: 2,
+        alignItems: 'space-between',
+        // justifyContent: 'space-around',
+        height: '53vh',
+        p: 2
       }}>
-      <Grid item xs={11}
-        sx={{
-          display: 'flex',
-          padding: 5,
-          bgcolor: "#ffff",
-          boxShadow: 1,
-          borderRadius: 2,
-          maxHeight: '35vh'
-        }}>
-        <Details event={event} />
-      </Grid>
-      <Grid item xs={11}
-        sx={{
-          display: 'flex',
-          padding: 5,
-          bgcolor: "#ffff",
-          boxShadow: 1,
-          borderRadius: 2,
-          maxHeight: '55vh'
 
-        }}>
-        <Chart />
-      </Grid>
-    </Grid >
+      <ThemeProvider theme={theme}>
+        <Grid item>
+          <Typography variant='h5'>DashBoard  </Typography>
+        </Grid>
+
+        <Grid item>
+
+        </Grid>
+
+
+      </ThemeProvider>
+
+    </Grid>
   )
 }

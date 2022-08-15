@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import CountEvent from './countEvent'
 import Heading from './heading'
-import Chart from './chart'
 import { Box, Grid } from '@mui/material'
 
 import { getCurrentEvent } from '../../features/slices/eventsSlice';
@@ -36,7 +35,7 @@ export default function EditEvent() {
     <Grid container>
       <Heading event={currentEvent} currentUser={currentUser} />
       <Grid container sx={{ display: 'flex', justifyContent: 'space-between', mt: '80px', flexWrap: 'wrap' }}>
-        <Chart />
+
         <CountEvent event={currentEvent} tasks={currentEventTasks} users={usersOfCurrentEvent} />
 
       </Grid>

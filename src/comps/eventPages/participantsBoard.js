@@ -9,7 +9,15 @@ export default function ParticipantsBoard({ users }) {
 
 
   return (
-    <Grid item sx={{ bgcolor: '#ffff', boxShadow: 1, borderRadius: 2, padding: 2, minHeight: '95vh' }}>
+    <Grid item
+      sx={{
+        bgcolor: '#ffff',
+        boxShadow: 1,
+        borderRadius: 2,
+        padding: 2,
+        minHeight: '95vh',
+
+      }}>
       <Grid item>
         <Typography variant='h5'>Participants<IconButton><AddBoxOutlinedIcon /></IconButton></Typography>
 

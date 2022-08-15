@@ -24,10 +24,10 @@ export const getCurrentEvent = createAsyncThunk(
 );
 
 export const editTitle = createAsyncThunk(
-  "events/editTitle", async (state, action) => {
+  "events/editTitle", async (_payload) => {
     // console.log(state)
-    console.log(state._id);
-    let resp = await doApiMethod(API_URL + `/events/patchTitle/${state._id}`, "PATCH", action._dataBody);
+    console.log(_payload._id);
+    let resp = await doApiMethod(API_URL + `/events/patchTitle/${_payload._id}`, "PATCH", _payload._dataBody);
     console.log(resp.data);
     return resp.data;
   }

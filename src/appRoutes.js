@@ -11,6 +11,8 @@ import Layout from './layout/layout';
 import TaskPage from './comps/tasks/taskPage';
 
 import EventBoard from './comps/eventPages/eventBoard';
+import AddTaskForm from './forms/addTaskForm';
+import Try from './forms/try';
 
 
 
@@ -30,7 +32,8 @@ export default function AppRoutes() {
           <Route path="/profile" element={<UserPage />} />
 
           <Route path="/new/:idEvent" element={<EventBoard />} />
-
+          <Route path="/addTask" element={<AddTaskForm />} />
+          <Route path="/addTasktry" element={<Try />} />
 
           <Route path="/event/:idEvent" element={<EventPageX />} />
           <Route path="/task/:idTsak" element={<TaskPage />} />

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { API_URL, doApiGet } from '../../services/apiService';
+import { API_URL, doApiGet, doApiMethod } from '../../services/apiService';
 
 
 
@@ -16,6 +16,20 @@ export const getCurrentEventTasks = createAsyncThunk(
   }
 );
 
+export const postNewTask = createAsyncThunk(
+  "tasks/postNewTask", async (_payload) => {
+    let resp = await doApiMethod(API_URL + `/tasks/${_payload._id}`, "POST", _payload._dataBody)
+    return resp.data;
+  }
+);
+
+export const patchStatus = createAsyncThunk(
+  "tasks/patchStatus", async (_payload) => {
+    let resp = await doApiMethod(API_URL + `/tasks/updateStatus/${_payload._id}`, "PATCH", _payload._dataBody)
+    return resp.data;
+  }
+);
+
 
 
 export const tasksSlice = createSlice({
@@ -24,6 +38,7 @@ export const tasksSlice = createSlice({
   initialState: {
     userTasks: [],
     currentEventTasks: [],
+    cuurentTask: {},
     status: null,
   },
   reducers: {
@@ -57,7 +72,30 @@ export const tasksSlice = createSlice({
       })
 
 
+      .addCase(postNewTask.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(postNewTask.fulfilled, (state, action) => {
+        state.status = "success";
+        console.log(action.payload);
+        if (action.payload) state.currentTask = action.payload;
+      })
+      .addCase(postNewTask.rejected, (state, action) => {
+        state.status = "failed";
+      })
 
+
+      .addCase(patchStatus.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(patchStatus.fulfilled, (state, action) => {
+        state.status = "success";
+        console.log("here");
+        // if (action.payload) state.currentTask = action.payload;
+      })
+      .addCase(patchStatus.rejected, (state, action) => {
+        state.status = "failed";
+      })
   }
 
 

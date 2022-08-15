@@ -8,6 +8,7 @@ import DashBoard from './dashBoard'
 import ParticipantsBoard from './participantsBoard'
 import TasksBoard from './tasksBoard'
 
+import '../../App.css'
 import { getCurrentEvent } from '../../features/slices/eventsSlice';
 import { getCurrentEventTasks } from '../../features/slices/tasksSlice';
 import Details from './details';
@@ -20,6 +21,7 @@ export default function EventBoard() {
   const currentEventTasks = useSelector((state) => state.tasksReducer.currentEventTasks);
   const usersOfCurrentEvent = useSelector((state) => state.eventsReducer.usersOfCurrentEvent);
   const params = useParams();
+
 
   useEffect(() => {
 
@@ -34,23 +36,26 @@ export default function EventBoard() {
 
 
   return (
-    <Container maxWidth='xl' >
+    <Container maxWidth="99vw">
       <Grid container spacing={2}
         sx={{
           display: 'flex',
           flexWrap: 'wrap',
-          justifyContent: 'space-evenly',
-          // justifyItems: 'center',
-          m: 2
+          justifyContent: 'space-around',
+          justifyItems: 'center',
+          m: 1
         }}>
 
-        <Grid item md={9} xs={11} mt={4}>
+        <Grid item md={3} xs={11} >
           <Details />
+          <DashBoard />
+        </Grid>
+
+        <Grid item md={5} xs={11}>
           <TasksBoard tasks={currentEventTasks} />
         </Grid>
 
-
-        <Grid item md={3} xs={11}>
+        <Grid item md={3} xs={11} elevation={3}>
           <ParticipantsBoard users={usersOfCurrentEvent} />
         </Grid>
 
