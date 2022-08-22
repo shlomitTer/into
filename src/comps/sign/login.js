@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from "react-redux";
+
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
@@ -7,10 +9,24 @@ import { doApiMethod, API_URL, TOKEN_NAME } from '../../services/apiService'
 import { colors } from '../../theme/theme'
 import { borderRadius } from '@mui/system';
 
+import { getCurrentUser } from '../../features/slices/userSlice';
+
 export default function Login() {
+  const dispatch = useDispatch();
 
   let { register, handleSubmit, formState: { errors } } = useForm();
   let nav = useNavigate();
+
+
+
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, []);
+
+
+
+
 
 
   const doApiLogin = async (_data) => {

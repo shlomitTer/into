@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 export const colors = createTheme({
   palette: {
@@ -24,3 +24,5 @@ export const colors = createTheme({
     // background: '#F9F9F9'
   },
 });
+export let theme = createTheme();
+theme = responsiveFontSizes(theme);

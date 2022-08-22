@@ -18,6 +18,7 @@ export const getCurrentEventTasks = createAsyncThunk(
 
 export const postNewTask = createAsyncThunk(
   "tasks/postNewTask", async (_payload) => {
+    console.log(_payload);
     let resp = await doApiMethod(API_URL + `/tasks/${_payload._id}`, "POST", _payload._dataBody)
     return resp.data;
   }
@@ -26,6 +27,13 @@ export const postNewTask = createAsyncThunk(
 export const patchStatus = createAsyncThunk(
   "tasks/patchStatus", async (_payload) => {
     let resp = await doApiMethod(API_URL + `/tasks/updateStatus/${_payload._id}`, "PATCH", _payload._dataBody)
+    return resp.data;
+  }
+);
+
+export const deleteTask = createAsyncThunk(
+  "tasks/deleteTask", async (task_id) => {
+    let resp = await doApiMethod(API_URL + `/tasks/delete/${task_id}`, "DELETE")
     return resp.data;
   }
 );
@@ -78,7 +86,13 @@ export const tasksSlice = createSlice({
       .addCase(postNewTask.fulfilled, (state, action) => {
         state.status = "success";
         console.log(action.payload);
-        if (action.payload) state.currentTask = action.payload;
+        if (action.payload) {
+          state.currentTask = action.payload;
+          state.currentEventTasks.unshift(action.payload)
+          console.log("456");
+
+        }
+
       })
       .addCase(postNewTask.rejected, (state, action) => {
         state.status = "failed";
@@ -94,6 +108,23 @@ export const tasksSlice = createSlice({
         // if (action.payload) state.currentTask = action.payload;
       })
       .addCase(patchStatus.rejected, (state, action) => {
+        state.status = "failed";
+      })
+
+
+      .addCase(deleteTask.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.status = "success";
+        if (action.payload._id) {
+          state.currentTask = {};
+          state.userTasks = state.userTasks.filter((item) => item._id !== action.payload._id)
+          state.currentEventTasks = state.currentEventTasks.filter((item) => item._id !== action.payload._id)
+
+        }
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
         state.status = "failed";
       })
   }

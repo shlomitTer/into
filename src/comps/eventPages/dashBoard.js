@@ -14,7 +14,7 @@ export default function DashBoard({ event }) {
         borderRadius: 2,
         alignItems: 'space-between',
         // justifyContent: 'space-around',
-        height: '53vh',
+        height: '55vh',
         p: 2
       }}>
 

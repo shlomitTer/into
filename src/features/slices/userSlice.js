@@ -18,7 +18,7 @@ export const userSlice = createSlice({
   name: 'user',
 
   initialState: {
-    currentUser: {},
+    currentUser: null,
     status: null,
   },
   reducers: {

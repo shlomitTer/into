@@ -12,6 +12,7 @@ import '../../App.css'
 import { getCurrentEvent } from '../../features/slices/eventsSlice';
 import { getCurrentEventTasks } from '../../features/slices/tasksSlice';
 import Details from './details';
+import LeftArea from './leftArea';
 
 export default function EventBoard() {
 
@@ -36,30 +37,27 @@ export default function EventBoard() {
 
 
   return (
-    <Container maxWidth="99vw">
-      <Grid container spacing={2}
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-around',
-          justifyItems: 'center',
-          m: 1
-        }}>
+    <Grid container spacing={2}
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        justifyItems: 'center',
 
-        <Grid item md={3} xs={11} >
-          <Details />
-          <DashBoard />
-        </Grid>
+      }}>
 
-        <Grid item md={5} xs={11}>
-          <TasksBoard tasks={currentEventTasks} />
-        </Grid>
-
-        <Grid item md={3} xs={11} elevation={3}>
-          <ParticipantsBoard users={usersOfCurrentEvent} />
-        </Grid>
-
+      <Grid item md={3} xs={11} >
+        <LeftArea />
       </Grid>
-    </Container>
+
+      <Grid item md={5} xs={11}>
+        <TasksBoard tasks={currentEventTasks} />
+      </Grid>
+
+      <Grid item md={3} xs={11} elevation={3}>
+        <ParticipantsBoard users={usersOfCurrentEvent} />
+      </Grid>
+
+    </Grid>
   )
 }

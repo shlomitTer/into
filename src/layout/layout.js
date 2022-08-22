@@ -1,19 +1,33 @@
-import { Grid, Item } from '@mui/material'
+import { Container, Grid, Item } from '@mui/material'
 import { Box } from '@mui/system'
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import MiniDrawer from './nav'
 import { colors, } from '../theme/theme'
+import LeftNav from './nav'
 
 export default function Layout() {
   return (
 
-    <Grid container spacing={2}>
-      <MiniDrawer />
-      <Box sx={{ flexGrow: 1, p: 0 }}>
-        <Outlet sx={{ bgcolor: colors.palette.background }} />
+    <Box spacing={2} maxWidth='100vw' display="grid" gridTemplateColumns="repeat(19, 1fr)">
+
+      {/* <Grid container 
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+        }}> */}
+
+      <Box gridColumn="span 1">
+        <LeftNav />
       </Box>
-    </Grid>
+
+      <Box gridColumn="span 18">
+        <Outlet />
+      </Box>
+
+      {/* </Grid> */}
+
+    </Box>
   )
 }
 

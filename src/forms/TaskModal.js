@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import { Box, IconButton } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import AddTaskForm from './addTaskForm';
 
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import TaskForm from './taskForm';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -22,17 +18,29 @@ const style = {
 };
 
 
-export default function AddTaskModal() {
+export default function TaskModal(props) {
 
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
+  // const handleOpen = () => setOpen(true);
+
+  useEffect(() => {
+    console.log(props.isCreationMode);
+    console.log(props.isEditMode);
+
+    if (props.isCreationMode || props.isEditMode)
+      setOpen(true)
+  }, [props])
+
+
+
+  const handleClose = () => {
+    props.setIsEditMode(false)
+    props.setIsCreationMode(false)
+    setOpen(false);
+  }
   return (
     <div>
-      <IconButton onClick={handleOpen}>
-        <AddBoxOutlinedIcon />
-      </IconButton>
 
 
       <Modal
@@ -48,7 +56,13 @@ export default function AddTaskModal() {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <AddTaskForm handleClose={handleClose} />
+            <TaskForm
+              task={props?.task}
+              handleClose={handleClose}
+              isCreationMode={props.isCreationMode}
+              isEditMode={props.isEditMode}
+
+            />
           </Box>
         </Fade>
       </Modal>

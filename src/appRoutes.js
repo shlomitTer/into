@@ -4,41 +4,32 @@ import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 
 import Home from './comps/home';
-import EventPageX from './comps/events/EventPageX';
 import Login from './comps/sign/login';
-import UserPage from './comps/userPage/userPage';
 import Layout from './layout/layout';
 import TaskPage from './comps/tasks/taskPage';
 
 import EventBoard from './comps/eventPages/eventBoard';
-import AddTaskForm from './forms/addTaskForm';
-import Try from './forms/try';
+import UserBoard from './comps/usersPages/userBoard';
 
 
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
-      <Routes>
-      </Routes>
 
       <Routes>
-
         <Route path="/" element={<Home />} />
-
-
         <Route path="/login" element={<Login />} />
+
         <Route element={<Layout />}>
-          <Route path="/profile" element={<UserPage />} />
+          <Route path="/profile" element={<UserBoard />} />
 
-          <Route path="/new/:idEvent" element={<EventBoard />} />
-          <Route path="/addTask" element={<AddTaskForm />} />
-          <Route path="/addTasktry" element={<Try />} />
+          <Route path="/event/:idEvent" element={<EventBoard />} />
 
-          <Route path="/event/:idEvent" element={<EventPageX />} />
           <Route path="/task/:idTsak" element={<TaskPage />} />
         </Route>
       </Routes>
+
       {/* opacity div for toast */}
       <ToastContainer position="top-left" theme='light' />
     </BrowserRouter>

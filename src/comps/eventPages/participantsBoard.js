@@ -9,13 +9,15 @@ export default function ParticipantsBoard({ users }) {
 
 
   return (
-    <Grid item
+    <Grid container
       sx={{
         bgcolor: '#ffff',
         boxShadow: 1,
         borderRadius: 2,
         padding: 2,
-        minHeight: '95vh',
+        minHeight: '99vh',
+        position: 'sticky',
+        top: 2
 
       }}>
       <Grid item>

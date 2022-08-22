@@ -12,6 +12,7 @@ export const getEventsByCreator = createAsyncThunk(
 export const getEventsByParticpant = createAsyncThunk(
   "events/getEventsByParticpant", async () => {
     let resp = await doApiGet(API_URL + `/events/userEvents`);
+
     return resp.data;
   }
 );
