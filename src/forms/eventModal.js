@@ -22,13 +22,8 @@ export default function EventModal(props) {
 
   const [open, setOpen] = useState(false);
 
-  // const handleOpen = () => setOpen(true);
 
   useEffect(() => {
-    console.log(props.isCreationModeEvent);
-    console.log(props.isEditModeEvent);
-
-
     if (props.isCreationModeEvent || props.isEditModeEvent)
       setOpen(true)
   }, [props])
@@ -36,10 +31,11 @@ export default function EventModal(props) {
 
 
   const handleClose = () => {
-    // props.setIsEditModeEvent(false)
+    props.setIsEditModeEvent(false)
     props.setIsCreationModeEvent(false)
     setOpen(false);
   }
+
   return (
     <div>
 
@@ -58,7 +54,7 @@ export default function EventModal(props) {
         <Fade in={open}>
           <Box sx={style}>
             <EventForm
-              // event={props?.event}
+              event={props?.event}
               handleClose={handleClose}
               isCreationModeEvent={props.isCreationModeEvent}
               isEditModeEvent={props.isEditModeEvent}

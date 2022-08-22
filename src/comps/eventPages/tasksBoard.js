@@ -5,18 +5,23 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 
 import TaskModal from '../../forms/TaskModal';
 import TaskItem from './taskItem';
+import { useDispatch } from 'react-redux';
+import { getCurrentEventTasks, getSortedCurrentEventTasks } from '../../features/slices/tasksSlice';
 
 
-export default function TasksBoard({ tasks }) {
+export default function TasksBoard({ tasks, currentEvent }) {
 
   const [isCreationMode, setIsCreationMode] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const dispatch = useDispatch();
 
-  // console.log(isCreationMode);
-  // console.log(isEditMode);
   const handleChange = (e) => {
-    let query = e.target.value;
-    alert(query)
+    let status = e.target.value;
+    let event_id = currentEvent._id;
+    if (status == 'All')
+      dispatch(getCurrentEventTasks(event_id))
+    else
+      dispatch(getSortedCurrentEventTasks({ event_id, status }))
   };
 
   return (
@@ -24,9 +29,10 @@ export default function TasksBoard({ tasks }) {
 
       <Grid item sx={{
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+
       }}>
-        <Grid item xs={6}
+        <Grid item xs={8}
           sx={{
             display: 'flex',
             alignItems: 'center'
@@ -39,9 +45,13 @@ export default function TasksBoard({ tasks }) {
             <AddBoxOutlinedIcon />
           </IconButton>
         </Grid>
-        <Grid item xs={5}>
-          <select onChange={handleChange} name="status">
-            <option>Sort By</option>
+        <Grid item xs={3}>
+          <select onChange={handleChange} name="status" style={{
+            fontSize: '14px',
+            padding: '2px'
+          }}>
+            <option value="" disabled selected hidden>Sort By</option>
+            <option value="All">All</option>
             <option value="Ready">Ready</option>
             <option value="InProgress">In progress</option>
             <option value="Done">Done</option>
@@ -53,6 +63,7 @@ export default function TasksBoard({ tasks }) {
       </Grid>
 
       <Grid item>
+
         {tasks && tasks.map(task => (
           <TaskItem key={task._id}
             task={task}
@@ -63,6 +74,12 @@ export default function TasksBoard({ tasks }) {
           />
         ))
         }
+        {(!tasks || tasks.length == 0) && <h3
+          style={{
+            padding: '12px',
+            color: '#d3d3d3',
+            fontSize: '40px'
+          }}>There are no tasks to display</h3>}
 
       </Grid >
       <TaskModal

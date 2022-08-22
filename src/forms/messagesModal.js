@@ -4,7 +4,8 @@ import { Box, IconButton } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 
-import TaskForm from './taskForm';
+import EventForm from './eventForm';
+import DeletionAlert from './deletionAlert';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -18,22 +19,22 @@ const style = {
 };
 
 
-export default function TaskModal(props) {
+export default function MessagesModal(props) {
 
   const [open, setOpen] = useState(false);
 
-  // const handleOpen = () => setOpen(true);
 
   useEffect(() => {
-    if (props.isCreationMode || props.isEditMode)
+    if (props.deleteItem)
       setOpen(true)
+    console.log(open);
+    console.log(props.deleteItem);
   }, [props])
 
 
 
   const handleClose = () => {
-    props.setIsEditMode(false)
-    props.setIsCreationMode(false)
+    props.setDeleteItem(false)
     setOpen(false);
   }
 
@@ -54,12 +55,11 @@ export default function TaskModal(props) {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <TaskForm
-              task={props?.task}
+            <DeletionAlert
+              deleteItem={props.deleteItem}
+              setDeleteItem={props.setDeleteItem}
               handleClose={handleClose}
-              isCreationMode={props.isCreationMode}
-              isEditMode={props.isEditMode}
-
+              event={props.event}
             />
           </Box>
         </Fade>

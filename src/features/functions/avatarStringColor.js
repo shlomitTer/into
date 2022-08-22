@@ -1,7 +1,7 @@
 export const stringAvatar = (name) => {
   // console.log(name);
 
-  let names = name.split(' ')
+  // let names = name.split(' ')
   let shortName = name.match(/\b(\w)/g) ? name.match(/\b(\w)/g).join('').toUpperCase() : '-';
   return {
     sx: {

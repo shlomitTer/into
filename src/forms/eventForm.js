@@ -5,11 +5,11 @@ import { useForm } from 'react-hook-form';
 import Box from '@mui/material/Box';
 
 import { Button, Stack, Typography } from '@mui/material';
-// import { postNewTask } from '../features/slices/tasksSlice';
 import { useParams } from 'react-router-dom';
 import HoverRating from './rating';
 import './taskForm.css'
 import { rootShouldForwardProp } from '@mui/material/styles/styled';
+import { editEvent, postNewEvent } from '../features/slices/eventsSlice';
 
 
 
@@ -18,12 +18,38 @@ export default function EventForm(props) {
   const dispatch = useDispatch();
   const params = useParams();
   let { register, handleSubmit, reset, formState: { errors } } = useForm();
-  // const [task_, setTask_] = useState();
+
+
+  useEffect(() => {
+
+    if (props.isCreationModeEvent)
+      reset({})
+    else if (props.isEditModeEvent) {
+      let body = {
+        title: props.event.title,
+        description: props.event.description,
+        date: props.event.date,
+        time: props.event.time,
+        location: props.event.location
+      }
+      reset(body)
+
+    }
+  }, [props.event])
+
 
 
 
   const onSub = (_dataBody) => {
-    dispatch()
+    console.log(_dataBody);
+    console.log("kkk");
+
+    if (props.isCreationModeEvent)
+      dispatch(postNewEvent(_dataBody))
+    else {
+      let _id = props.event._id;
+      dispatch(editEvent({ _id, _dataBody }))
+    }
     props.handleClose();
 
   }
@@ -56,7 +82,6 @@ export default function EventForm(props) {
         <label >Location:</label>
         <input {...register('location', { required: false, minLength: 0 })} type="text" />
         {errors.location && <small className='_error'>Enter valid location</small>}
-        <HoverRating />
 
         <Stack
           spacing={2}
@@ -66,8 +91,10 @@ export default function EventForm(props) {
         >
           <Button variant="text" onClick={props.handleClose}>Cancel</Button>
 
-          <Button
-            variant="text" type='submit'>Create</Button>
+          {props.isCreationModeEvent ?
+            <Button variant="text" type='submit'>Create</Button> :
+            <Button variant="text" type='submit'>Edit</Button>
+          }
         </Stack>
 
       </form>

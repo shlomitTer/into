@@ -63,14 +63,14 @@ export default function EventItem({ event, user }) {
 
           <Typography>{date}</Typography>
         </Grid>
-        <AvatarGroup max={3}>
+        {/* <AvatarGroup max={3}>
           {event.usersId_arr && event.usersId_arr.map(user => (
             <Avatar
               key={user._id} {...stringAvatar(user?.name)} ></Avatar>
 
           ))
           }
-        </AvatarGroup>
+        </AvatarGroup> */}
       </Link>
     </Grid >
 

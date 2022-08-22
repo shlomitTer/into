@@ -5,11 +5,11 @@ import { useForm } from 'react-hook-form';
 import Box from '@mui/material/Box';
 
 import { Button, Stack, Typography } from '@mui/material';
-import { postNewTask } from '../features/slices/tasksSlice';
 import { useParams } from 'react-router-dom';
 import HoverRating from './rating';
 import './taskForm.css'
 import { rootShouldForwardProp } from '@mui/material/styles/styled';
+import { postNewTask } from '../features/slices/tasksSlice';
 
 
 
@@ -18,39 +18,40 @@ export default function TaskForm(props) {
   const dispatch = useDispatch();
   const params = useParams();
   let { register, handleSubmit, reset, formState: { errors } } = useForm();
-  const [task_, setTask_] = useState();
+
+
   useEffect(() => {
-    if (props.task) setTask_(props.task)
+
+    if (props.isCreationMode)
+      reset({})
+    else if (props.isEditMode) {
+      let body = {
+        title: props.task.title,
+        description: props.task.description,
+        date: props.task.date,
+        time: props.task.time,
+        location: props.task.location
+      }
+      console.log(body);
+      console.log(props);
+      // reset(body)
+    }
   }, [props.task])
-
-
-  useEffect(() => {
-    console.log(props.isCreationMode);
-    console.log(props.isEditMode);
-
-    // if (props.isCreationMode)
-    // reset({})
-    // if (props.isEditMode)
-    reset({ title: task_?.title })
-
-
-  }, [task_])
 
 
 
   const onSub = (_dataBody) => {
     const _id = params.idEvent;
-
-
     if (props.isCreationMode) {
       _dataBody.weight = 1;
       _dataBody.status = 'Ready';
       dispatch(postNewTask({ _dataBody, _id }))
-      props.handleClose();
+    } else {
     }
+    props.handleClose();
+
   }
-  console.log(task_);
-  console.log(props.task)
+
   return (
     <Box >
       {props.isCreationMode && <Typography variant='h3'>New Task</Typography>}

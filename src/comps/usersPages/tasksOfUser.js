@@ -17,11 +17,15 @@ export default function TasksOfUser({ tasks }) {
       <Grid item>
         {tasks && tasks.map(task => (
           <TaskItem key={task._id} task={task}
-
           />
         ))
         }
-
+        {(!tasks || tasks.length == 0) && <h3
+          style={{
+            padding: '12px',
+            color: '#d3d3d3',
+            fontSize: '20px'
+          }}>There are no tasks to display</h3>}
       </Grid >
     </Grid >
   )

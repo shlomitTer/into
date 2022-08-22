@@ -12,27 +12,42 @@ export const getEventsByCreator = createAsyncThunk(
 export const getEventsByParticpant = createAsyncThunk(
   "events/getEventsByParticpant", async () => {
     let resp = await doApiGet(API_URL + `/events/userEvents`);
-
     return resp.data;
   }
 );
 export const getCurrentEvent = createAsyncThunk(
   "events/getCurrentEvent", async (event_id) => {
     let resp = await doApiGet(API_URL + `/events/eventInfo/${event_id}`);
-    // console.log(resp.data);
     return resp.data;
   }
 );
 
-export const editTitle = createAsyncThunk(
-  "events/editTitle", async (_payload) => {
-    // console.log(state)
-    console.log(_payload._id);
-    let resp = await doApiMethod(API_URL + `/events/patchTitle/${_payload._id}`, "PATCH", _payload._dataBody);
-    console.log(resp.data);
+export const postNewEvent = createAsyncThunk(
+  "events/postNewEvent", async (_payload) => {
+    let resp = await doApiMethod(API_URL + `/events`, "POST", _payload);
     return resp.data;
   }
 );
+export const editEvent = createAsyncThunk(
+  "events/editEvent", async (_payload) => {
+    let resp = await doApiMethod(API_URL + `/events/editEvent/${_payload._id}`, "PUT", _payload._dataBody);
+    return resp.data;
+  });
+export const deleteEvent = createAsyncThunk(
+  "events/deleteEvent", async (_payload) => {
+    let resp = await doApiMethod(API_URL + `/events/del/${_payload}`, "DELETE");
+    return resp.data;
+  }
+);
+// export const editTitle = createAsyncThunk(
+//   "events/editTitle", async (_payload) => {
+//     // console.log(state)
+//     console.log(_payload._id);
+//     let resp = await doApiMethod(API_URL + `/events/patchTitle/${_payload._id}`, "PATCH", _payload._dataBody);
+//     console.log(resp.data);
+//     return resp.data;
+//   }
+// );
 
 
 
@@ -47,13 +62,6 @@ export const eventsSlice = createSlice({
     status: null,
   },
   reducers: {
-    // createNewEventItem: (state, action) => {
-    //   state.currentEvent = action.payload;
-    //   console.log(action.payload)
-    //   state.usersOfCurrentEvent = action.payload.usersId_arr;
-    // },
-
-
   },
 
   extraReducers(builder) {
@@ -100,16 +108,61 @@ export const eventsSlice = createSlice({
 
 
 
-      .addCase(editTitle.pending, (state, action) => {
+      .addCase(postNewEvent.pending, (state, action) => {
         state.status = "loading";
       })
-      .addCase(editTitle.fulfilled, (state, action) => {
-        // להשלים לוגיקה
+      .addCase(postNewEvent.fulfilled, (state, action) => {
+        if (action.payload) state.eventsByParticpant.unshift(action.payload);
+
         state.status = "success";
       })
-      .addCase(editTitle.rejected, (state, action) => {
+      .addCase(postNewEvent.rejected, (state, action) => {
         state.status = "failed";
       })
+
+
+      .addCase(editEvent.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(editEvent.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.eventsByParticpant = state.eventsByParticpant.filter((item) => item._id !== action.payload._id);
+          state.currentEvent = action.payload;
+          state.usersOfCurrentEvent = action.payload.usersId_arr;
+        }
+        state.status = "success";
+      })
+      .addCase(editEvent.rejected, (state, action) => {
+        state.status = "failed";
+      })
+
+
+      .addCase(deleteEvent.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(deleteEvent.fulfilled, (state, action) => {
+        if (action.payload) {
+          //return id
+          state.eventsByParticpant = state.eventsByParticpant.filter((item) => item._id !== action.payload);
+          // state.currentEvent = {}
+          // state.usersOfCurrentEvent = {};
+        }
+        state.status = "success";
+      })
+      .addCase(deleteEvent.rejected, (state, action) => {
+        state.status = "failed";
+      })
+
+    // .addCase(editTitle.pending, (state, action) => {
+    //   state.status = "loading";
+    // })
+    // .addCase(editTitle.fulfilled, (state, action) => {
+    //   // להשלים לוגיקה
+    //   state.status = "success";
+    // })
+    // .addCase(editTitle.rejected, (state, action) => {
+    //   state.status = "failed";
+    // })
 
 
   }

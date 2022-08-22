@@ -50,6 +50,12 @@ export default function EventsOfUser({ events, user }) {
             key={event._id} />
         ))
         }
+        {(!events || events.length == 0) && <h3
+          style={{
+            padding: '12px',
+            color: '#d3d3d3',
+            fontSize: '40px'
+          }}>There are no events to display</h3>}
 
       </Grid >
 

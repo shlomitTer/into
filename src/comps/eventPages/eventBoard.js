@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 
@@ -22,10 +22,9 @@ export default function EventBoard() {
   const currentEventTasks = useSelector((state) => state.tasksReducer.currentEventTasks);
   const usersOfCurrentEvent = useSelector((state) => state.eventsReducer.usersOfCurrentEvent);
   const params = useParams();
-
+  const [isEditEventAllowed, setIsEditEventAllowed] = useState(false);
 
   useEffect(() => {
-
     doApi();
 
   }, [])
@@ -35,6 +34,13 @@ export default function EventBoard() {
     dispatch(getCurrentEventTasks(params.idEvent));
   }
 
+  // useEffect(() => {
+
+  //   //check if user can edit event
+  //   if (currentEvent?.user_id == currentUser?._id ||
+  //     (currentEvent?.usersId_arr.includes(currentUser?._id) && currentEvent?.EditableByParticipants))
+  //     setIsEditEventAllowed(true);
+  // }, [currentEvent, currentUser])
 
   return (
     <Grid container spacing={2}
@@ -47,11 +53,15 @@ export default function EventBoard() {
       }}>
 
       <Grid item md={3} xs={11} >
-        <LeftArea />
+        <LeftArea
+          event={currentEvent}
+          isEditEventAllowed={isEditEventAllowed} />
       </Grid>
 
       <Grid item md={5} xs={11}>
-        <TasksBoard tasks={currentEventTasks} />
+        <TasksBoard
+          tasks={currentEventTasks}
+          currentEvent={currentEvent} />
       </Grid>
 
       <Grid item md={3} xs={11} elevation={3}>

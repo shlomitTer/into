@@ -16,6 +16,13 @@ export const getCurrentEventTasks = createAsyncThunk(
   }
 );
 
+export const getSortedCurrentEventTasks = createAsyncThunk(
+  "tasks/getSortedCurrentEventTasks", async (_payload) => {
+    let resp = await doApiGet(API_URL + `/tasks/${_payload.event_id}?status=${_payload.status}`);
+    return resp.data;
+  }
+);
+
 export const postNewTask = createAsyncThunk(
   "tasks/postNewTask", async (_payload) => {
     console.log(_payload);
@@ -79,6 +86,17 @@ export const tasksSlice = createSlice({
         state.status = "failed";
       })
 
+      .addCase(getSortedCurrentEventTasks.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getSortedCurrentEventTasks.fulfilled, (state, action) => {
+        state.status = "success";
+        if (action.payload) state.currentEventTasks = action.payload;
+      })
+      .addCase(getSortedCurrentEventTasks.rejected, (state, action) => {
+        state.status = "failed";
+      })
+
 
       .addCase(postNewTask.pending, (state, action) => {
         state.status = "loading";
@@ -104,7 +122,7 @@ export const tasksSlice = createSlice({
       })
       .addCase(patchStatus.fulfilled, (state, action) => {
         state.status = "success";
-        console.log("here");
+        //להוסיף לוגיקה
         // if (action.payload) state.currentTask = action.payload;
       })
       .addCase(patchStatus.rejected, (state, action) => {

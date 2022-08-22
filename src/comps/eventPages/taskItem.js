@@ -12,10 +12,12 @@ import { stringAvatar } from '../../features/functions/avatarStringColor'
 import { patchStatus } from '../../features/slices/tasksSlice';
 import BtnDelEdit from '../tasksPages/btnDelEdit';
 import { theme } from '../../theme/theme'
+import { countDays } from '../../features/functions/countDays';
 // import { shorten_a_string } from '../../features/functions/string'
 
 
 export default function TaskItem(props) {
+  const [days, setDays] = useState('')
   const dispatch = useDispatch()
 
   const [icon, setIcon] = useState({
@@ -32,6 +34,8 @@ export default function TaskItem(props) {
     }
     tempStatus[props.task.status] = true
     setIcon(tempStatus)
+    setDays(countDays(props.task.date))
+
   }, [props.task])
 
   const handleChange = (_id) => (e) => {
@@ -49,7 +53,7 @@ export default function TaskItem(props) {
     dispatch(patchStatus({ _dataBody, _id }));
   }
   return (
-    <Grid item xs={11}
+    <Grid item xs={12}
       sx={{
         minHeight: '150px',
         bgcolor: 'white',
@@ -142,7 +146,7 @@ export default function TaskItem(props) {
 
           <Grid item xs={11} lg={4} sx={{ textAlign: 'center' }} >
 
-            <Typography variant='body2'>23 Days left</Typography>
+            <Typography variant='body2' color={days.color}>{days.str}</Typography>
           </Grid>
 
         </Grid>
