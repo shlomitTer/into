@@ -2,13 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from 'react-hook-form';
 
-import Box from '@mui/material/Box';
-
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography, Box } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import HoverRating from './rating';
-import './taskForm.css'
-import { rootShouldForwardProp } from '@mui/material/styles/styled';
+
+import './forms.css'
 import { editEvent, postNewEvent } from '../features/slices/eventsSlice';
 
 
@@ -21,7 +18,6 @@ export default function EventForm(props) {
 
 
   useEffect(() => {
-
     if (props.isCreationModeEvent)
       reset({})
     else if (props.isEditModeEvent) {
@@ -41,9 +37,6 @@ export default function EventForm(props) {
 
 
   const onSub = (_dataBody) => {
-    console.log(_dataBody);
-    console.log("kkk");
-
     if (props.isCreationModeEvent)
       dispatch(postNewEvent(_dataBody))
     else {
@@ -61,23 +54,20 @@ export default function EventForm(props) {
       <form onSubmit={handleSubmit(onSub)}>
 
         <label >Title</label>
-        <input {...register('title', { required: true, minLength: 2 })} type="text" />
+        <input {...register('title', { required: true, minLength: 2, maxLength: 15 })} type="text" />
         {errors.title && <small className='_error'>Enter valid name (min 2 chars)</small>}
 
         <label >Description</label>
-        <textarea {...register('description', { required: true, minLength: 2, maxLength: 99 })} type="text" ></textarea>
+        <textarea {...register('description', { required: true, minLength: 2, maxLength: 50 })} type="text" ></textarea>
         {errors.description && <small className='_error'>Enter valid name (min 2 chars)</small>}
 
-
-
-
         <label >Date</label>
-        <input {...register('date', { required: true, minLength: 2 })} type="date" />
+        <input min={new Date().toISOString().slice(0, -8)} {...register('date', { required: true })} type="datetime-local" />
         {errors.date && <small className='_error'>Choose date</small>}
 
-
+        {/* 
         <label>Time:</label>
-        <input {...register('time', { required: false, minLength: 0 })} type="time" defaultValue={"07:00"} />
+        <input {...register('time', { required: false, minLength: 0 })} type="time" defaultValue={"07:00"} /> */}
 
         <label >Location:</label>
         <input {...register('location', { required: false, minLength: 0 })} type="text" />

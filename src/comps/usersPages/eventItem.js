@@ -28,7 +28,7 @@ export default function EventItem({ event, user }) {
   return (
 
 
-    <Grid item xs={11} md={3} sx={{
+    <Grid item xs={12} md={5} sx={{
       boxShadow: 1,
       borderRadius: 2,
       // height: '180px',
@@ -63,14 +63,14 @@ export default function EventItem({ event, user }) {
 
           <Typography>{date}</Typography>
         </Grid>
-        {/* <AvatarGroup max={3}>
+        <AvatarGroup max={3}>
           {event.usersId_arr && event.usersId_arr.map(user => (
             <Avatar
               key={user._id} {...stringAvatar(user?.name)} ></Avatar>
 
           ))
           }
-        </AvatarGroup> */}
+        </AvatarGroup>
       </Link>
     </Grid >
 

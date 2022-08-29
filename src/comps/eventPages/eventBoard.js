@@ -65,7 +65,9 @@ export default function EventBoard() {
       </Grid>
 
       <Grid item md={3} xs={11} elevation={3}>
-        <ParticipantsBoard users={usersOfCurrentEvent} />
+        <ParticipantsBoard
+          users={usersOfCurrentEvent}
+        />
       </Grid>
 
     </Grid>

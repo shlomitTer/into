@@ -15,6 +15,12 @@ export const getCurrentEventTasks = createAsyncThunk(
     return resp.data;
   }
 );
+export const getCurrentTask = createAsyncThunk(
+  "tasks/idTask", async (task_id) => {
+    let resp = await doApiGet(API_URL + `/tasks/${task_id}`);
+    return resp.data;
+  }
+);
 
 export const getSortedCurrentEventTasks = createAsyncThunk(
   "tasks/getSortedCurrentEventTasks", async (_payload) => {
@@ -40,7 +46,16 @@ export const patchStatus = createAsyncThunk(
 
 export const deleteTask = createAsyncThunk(
   "tasks/deleteTask", async (task_id) => {
+    console.log("1");
     let resp = await doApiMethod(API_URL + `/tasks/delete/${task_id}`, "DELETE")
+    return resp.data;
+  }
+);
+export const editTask = createAsyncThunk(
+  "tasks/editTask", async (_payload) => {
+    console.log("yes111");
+
+    let resp = await doApiMethod(API_URL + `/tasks/${_payload._id}`, "PUT", _payload._body)
     return resp.data;
   }
 );
@@ -86,6 +101,17 @@ export const tasksSlice = createSlice({
         state.status = "failed";
       })
 
+      .addCase(getCurrentTask.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getCurrentTask.fulfilled, (state, action) => {
+        state.status = "success";
+        if (action.payload) state.cuurentTask = action.payload;
+      })
+      .addCase(getCurrentTask.rejected, (state, action) => {
+        state.status = "failed";
+      })
+
       .addCase(getSortedCurrentEventTasks.pending, (state, action) => {
         state.status = "loading";
       })
@@ -102,12 +128,12 @@ export const tasksSlice = createSlice({
         state.status = "loading";
       })
       .addCase(postNewTask.fulfilled, (state, action) => {
-        state.status = "success";
         console.log(action.payload);
+
+        state.status = "success";
         if (action.payload) {
           state.currentTask = action.payload;
           state.currentEventTasks.unshift(action.payload)
-          console.log("456");
 
         }
 
@@ -134,15 +160,34 @@ export const tasksSlice = createSlice({
         state.status = "loading";
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
-        state.status = "success";
+        console.log(action.payload);
         if (action.payload._id) {
-          state.currentTask = {};
+          state.status = "success";
           state.userTasks = state.userTasks.filter((item) => item._id !== action.payload._id)
           state.currentEventTasks = state.currentEventTasks.filter((item) => item._id !== action.payload._id)
-
         }
       })
       .addCase(deleteTask.rejected, (state, action) => {
+        console.log(action);
+        state.status = "failed";
+      })
+
+
+      .addCase(editTask.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(editTask.fulfilled, (state, action) => {
+        state.status = "success";
+        console.log(action.payload);
+        if (action.payload._id) {
+          state.userTasks = state.userTasks.filter((item) => item._id != action.payload._id)
+          state.userTasks.unshift(action.payload)
+          state.currentEventTasks = state.currentEventTasks.filter((item) => item._id != action.payload._id)
+          state.currentEventTasks.unshift(action.payload)
+        }
+
+      })
+      .addCase(editTask.rejected, (state, action) => {
         state.status = "failed";
       })
   }

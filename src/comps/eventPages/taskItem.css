@@ -1,0 +1,38 @@
+.btn{
+  color:#cdcfd1!important;
+  font-size:11px!important;
+  border:#cdcfd1!important;
+}
+
+.btn:hover{
+  color:white!important;
+  border:#373636!important;
+  background: #c9c3c3!important;
+}
+._green{
+ background-color: rgb(26, 126, 26)!important;
+ font-size:11px!important;
+ color: white!important;
+ border:none!important;
+}
+._green:hover{
+  background:  rgb(62, 143, 62)!important;
+}
+._red{
+ background-color: rgb(166, 25, 25)!important;
+ font-size:11px!important;
+ color: white!important;
+ border:none!important;
+}
+._red:hover{
+  background-color: rgb(196, 58, 58)!important;
+}
+._yellow{
+ background-color: rgb(234, 234, 11)!important;
+ font-size:11px!important;
+ color: white!important;
+ border:none!important;
+}
+._yellow:hover{
+  background-color: rgb(250, 250, 61)!important;
+}

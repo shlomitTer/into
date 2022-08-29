@@ -15,7 +15,7 @@ export default function BtnDelEdit(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const _open = Boolean(anchorEl);
   const dispatch = useDispatch();
-
+  console.log((props));
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

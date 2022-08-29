@@ -12,7 +12,6 @@ import { getCurrentEventTasks, getSortedCurrentEventTasks } from '../../features
 export default function TasksBoard({ tasks, currentEvent }) {
 
   const [isCreationMode, setIsCreationMode] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -45,7 +44,7 @@ export default function TasksBoard({ tasks, currentEvent }) {
             <AddBoxOutlinedIcon />
           </IconButton>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <select onChange={handleChange} name="status" style={{
             fontSize: '14px',
             padding: '2px'
@@ -67,10 +66,7 @@ export default function TasksBoard({ tasks, currentEvent }) {
         {tasks && tasks.map(task => (
           <TaskItem key={task._id}
             task={task}
-            isCreationMode={isCreationMode}
-            setIsCreationMode={setIsCreationMode}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
+
           />
         ))
         }
@@ -85,8 +81,7 @@ export default function TasksBoard({ tasks, currentEvent }) {
       <TaskModal
         isCreationMode={isCreationMode}
         setIsCreationMode={setIsCreationMode}
-        isEditMode={isEditMode}
-        setIsEditMode={setIsEditMode}
+
       />
     </Grid >
   )

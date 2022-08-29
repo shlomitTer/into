@@ -1,12 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { API_URL, doApiGet } from '../../services/apiService';
+import { API_URL, doApiGet, doApiMethod } from '../../services/apiService';
 
 
 
 export const getCurrentUser = createAsyncThunk(
   "user/getCurrentUser", async (dispatch, getState) => {
     let resp = await doApiGet(API_URL + `/users/userInfo`);
-    // console.log(resp.data);
+    return resp.data;
+  }
+);
+export const login = createAsyncThunk(
+  "user/login", async (_payload) => {
+    let resp = await doApiMethod(API_URL + `/users/login`, "POST", _payload);
+    return resp.data;
+  }
+);
+export const signUp = createAsyncThunk(
+  "user/signUp", async (_payload) => {
+    let resp = await doApiMethod(API_URL + `/users`, "POST", _payload);
     return resp.data;
   }
 );
@@ -18,10 +29,13 @@ export const userSlice = createSlice({
   name: 'user',
 
   initialState: {
-    currentUser: null,
-    status: null,
+    currentUser: undefined,
+    status: "",
   },
   reducers: {
+    logout: (state, action) => {
+      state.currentUser = undefined
+    }
 
   },
 
@@ -31,11 +45,45 @@ export const userSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
+        console.log(action);
         state.status = "success";
 
-        if (action.payload) state.currentUser = action.payload;
+        state.currentUser = action.payload;
+
+        if (action.payload.message) state.currentUser = undefined;
+
+
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
+        state.status = "failed";
+      })
+
+      .addCase(login.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.status = "success";
+
+        if (action.payload.user) {
+          localStorage.setItem("into_token", action.payload.token);
+          state.currentUser = action.payload.user;
+        }
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.status = "failed";
+      })
+      .addCase(signUp.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.status = "success";
+
+        if (action.payload.user) {
+          localStorage.setItem("into_token", action.payload.token);
+          state.currentUser = action.payload.user;
+        }
+      })
+      .addCase(signUp.rejected, (state, action) => {
         state.status = "failed";
       })
 
@@ -49,5 +97,7 @@ export const userSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 // export const { increment, decrement, incrementByAmount } = counterSlice.actions
-
+export const {
+  logout
+} = userSlice.actions;
 export default userSlice.reducer

@@ -1,40 +1,69 @@
-import { Grid, IconButton, Typography } from '@mui/material'
-import React from 'react'
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
-import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
-import './leftNav.css'
-import { padding } from '@mui/system';
 
-export default function LeftNav() {
+import React, { useState } from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import Logout from '../comps/logout';
+import { Link } from 'react-router-dom';
+
+export default function Nav() {
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
-    <Grid container
-      sx={{
-        display: 'flex',
-        position: "sticky",
-        textAlign: 'center',
-        top: 2,
-        padding: 1
-      }}>
-      <Typography>IntoIt</Typography>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+            Into It
+          </Typography>
+          <div>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <Link to={"/profile"} onClick={handleClose}>Profile</Link>
+              <Link to={"/logout"} onClick={handleClose}>Log Out</Link>
 
-      <div>
-        <IconButton >
-          <AddBoxOutlinedIcon fontSize='large' />
-        </IconButton>
-        <h6>
-          Add Event
-        </h6>
-      </div>
+            </Menu>
+          </div>
 
-      <div>
-        <IconButton >
-          <AccountBoxOutlinedIcon fontSize='large' />
-        </IconButton>
-        <h6>
-          My Board
-        </h6>
-      </div>
-    </Grid>
+        </Toolbar>
+      </AppBar>
 
+    </Box>
   )
 }

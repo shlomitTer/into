@@ -1,69 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import Backdrop from '@mui/material/Backdrop';
-import { Box, IconButton } from '@mui/material';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
-
+import Dialog from '@mui/material/Dialog';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import TaskForm from './taskForm';
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 
 export default function TaskModal(props) {
 
   const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  console.log(open)
+
 
   // const handleOpen = () => setOpen(true);
 
   useEffect(() => {
     if (props.isCreationMode || props.isEditMode)
       setOpen(true)
-  }, [props])
+  }, [props.isCreationMode, props.isEditMode])
 
 
 
   const handleClose = () => {
-    props.setIsEditMode(false)
-    props.setIsCreationMode(false)
+
+    if (props.isEditMode)
+      props.setIsEditMode(false)
+    else
+      props.setIsCreationMode(false)
     setOpen(false);
+
   }
+
 
   return (
     <div>
-
-
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+      <Dialog
+        fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <Box sx={style}>
-            <TaskForm
-              task={props?.task}
-              handleClose={handleClose}
-              isCreationMode={props.isCreationMode}
-              isEditMode={props.isEditMode}
+        aria-labelledby="responsive-dialog-title"
+        fullWidth
+        maxWidth='xs'
 
-            />
-          </Box>
-        </Fade>
-      </Modal>
+
+      >
+        <div style={{ padding: '40px 30px' }}>
+          <TaskForm
+            task={props?.task}
+
+            isCreationMode={props.isCreationMode}
+            isEditMode={props.isEditMode}
+            setIsCreationMode={props.setIsCreationMode}
+            setIsEditMode={props.setIsEditMode}
+            setOpen={setOpen}
+          />
+        </div>
+      </Dialog>
     </div>
   );
 }

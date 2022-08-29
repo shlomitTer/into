@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { Grid, Typography, Box, Divider, AvatarGroup, Avatar, InputLabel, MenuItem, FormControl, Select, OutlinedInput, Card } from '@mui/material'
-
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PendingIcon from '@mui/icons-material/Pending';
-import SyncIcon from '@mui/icons-material/Sync';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import { Grid, Typography, Divider, AvatarGroup, Avatar, IconButton, MenuItem, FormControl, Select, Button, Stack } from '@mui/material'
+import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 import { stringAvatar } from '../../features/functions/avatarStringColor'
 import { patchStatus } from '../../features/slices/tasksSlice';
-import BtnDelEdit from '../tasksPages/btnDelEdit';
-import { theme } from '../../theme/theme'
+
 import { countDays } from '../../features/functions/countDays';
+import TaskModal from '../../forms/TaskModal';
+import Alert from '../../forms/alert'
+import './taskItem.css'
 // import { shorten_a_string } from '../../features/functions/string'
 
 
 export default function TaskItem(props) {
-  const [days, setDays] = useState('')
   const dispatch = useDispatch()
-
+  const [days, setDays] = useState('')
+  const [date, setDate] = useState();
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isDeleteTask, setIsDeleteTask] = useState(false);
   const [icon, setIcon] = useState({
     Ready: false,
     InProgress: false,
@@ -38,18 +39,22 @@ export default function TaskItem(props) {
 
   }, [props.task])
 
-  const handleChange = (_id) => (e) => {
+
+  useEffect(() => {
+    let _date = new Date(props.task.date).toLocaleDateString()
+    setDate(_date)
+  }, [])
+
+  const handleClick = (_id, _value) => {
     let statusIcon = {
       Ready: false,
       InProgress: false,
       Done: false
     }
-    // console.table(statusIcon);
-    let statusStr = e.target.value
-    let _dataBody = { status: statusStr }
-
-    statusIcon[statusStr] = true;
+    statusIcon[_value] = true;
     setIcon(statusIcon)
+
+    let _dataBody = { status: _value }
     dispatch(patchStatus({ _dataBody, _id }));
   }
   return (
@@ -69,8 +74,12 @@ export default function TaskItem(props) {
         justifyItems: 'center'
       }} key={props.task._id}>
 
-      <Grid item xs={2}>
-        <FormControl variant="standard" sx={{ width: '80%' }}>
+      <Grid item xs={3}
+        sx={{
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+        {/* <FormControl variant="standard" sx={{ width: '80%' }}>
           <Select
             fullWidth
             labelId="demo-simple-select-standard-label"
@@ -82,46 +91,44 @@ export default function TaskItem(props) {
               fontSize: '11px',
             }}
           >
-
             <MenuItem value="Ready">Ready</MenuItem>
             <MenuItem value="InProgress">In Progress</MenuItem>
             <MenuItem value="Done">Done</MenuItem>
 
           </Select>
-        </FormControl>
-        {icon.Ready && <PendingIcon fontSize='large' color='error' />}
+        </FormControl> */}
+        <Stack spacing={2} sx={{}}>
+          <Button onClick={() => { handleClick(props.task._id, "Ready") }} className={`${icon.Ready ? '_red' : 'btn'}`}>Ready</Button>
+          <Button onClick={() => { handleClick(props.task._id, "InProgress") }} className={`${icon.InProgress ? '_yellow' : 'btn'}`}>In Progress</Button>
+          <Button onClick={() => { handleClick(props.task._id, "Done") }} className={`${icon.Done ? '_green' : 'btn'}`}>Done</Button>
+        </Stack>
+        {/* {icon.Ready && <PendingIcon fontSize='large' color='error' />}
         {icon.InProgress && <SyncIcon fontSize='large' color='warning' />}
-        {icon.Done && <TaskAltIcon fontSize='large' color='success' />}
+        {icon.Done && <TaskAltIcon fontSize='large' color='success' />} */}
       </Grid>
       <Divider orientation="vertical" variant="middle" flexItem />
 
-      <Grid item xs={9} px={2}>
+      <Grid item xs={8} px={2}>
+
         <Grid item sx={{
           display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between'
+          justifyContent: 'end',
         }}>
-          <Grid item sm={11} md={9}>
-            <Typography variant='h6'>{props.task.title}</Typography>
-          </Grid>
-          <Grid item sm={11} md={2}>
-            <BtnDelEdit
-              task={props.task}
-              isCreationMode={props.isCreationMode}
-              setIsCreationMode={props.setIsCreationMode}
-              isEditMode={props.isEditMode}
-              setIsEditMode={props.setIsEditMode}
-            />
-          </Grid>
+          <IconButton onClick={() => {
+            setIsEditMode(true);
 
+          }}>
+            <ModeEditOutlinedIcon fontSize="small" />
+          </IconButton>
+
+          <IconButton onClick={() => {
+            setIsDeleteTask(true)
+          }}>
+            <DeleteOutlinedIcon fontSize="small" />
+          </IconButton>
         </Grid>
-
-
-
+        <Typography variant='h6'>{props.task.title}</Typography>
         <Typography variant='body1' sx={{ height: '47px' }}>{props.task.description}</Typography>
-
-
-
         <Grid item sx={{
           display: 'flex',
           flexWrap: 'wrap',
@@ -130,8 +137,15 @@ export default function TaskItem(props) {
           alignContent: 'space-between',
           alignItems: 'center',
         }}>
-          <Grid item xs={11} lg={4} px={5}>
+          <Grid item xs={12} xl={4} >
+            <Typography variant='body2' sx={{ textAlign: 'center' }}>{date}</Typography>
+          </Grid>
 
+          <Grid item xs={12} xl={4} sx={{ textAlign: 'center' }} >
+            <Typography variant='body2' color={days.color}>{days.str}</Typography>
+          </Grid>
+
+          <Grid item xs={12} xl={4} px={5}>
             <AvatarGroup max={2}>
               {props.task.usersId_arr && props.task.usersId_arr.map(user => (
 
@@ -140,18 +154,24 @@ export default function TaskItem(props) {
             </AvatarGroup>
           </Grid>
 
-          <Grid item xs={11} lg={4} >
-            <Typography variant='body2' sx={{ textAlign: 'center' }}>{props.task.date.slice(0, 10)}</Typography>
-          </Grid>
-
-          <Grid item xs={11} lg={4} sx={{ textAlign: 'center' }} >
-
-            <Typography variant='body2' color={days.color}>{days.str}</Typography>
-          </Grid>
-
         </Grid>
       </Grid>
 
+      <TaskModal
+        task={props.task}
+        // isCreationMode={props.isCreationMode}
+        // setIsCreationMode={props.setIsCreationMode}
+        isEditMode={isEditMode}
+        setIsEditMode={setIsEditMode}
+
+      />
+      <Alert
+        task={props.task}
+        isDeleteTask={isDeleteTask}
+        setIsDeleteTask={setIsDeleteTask}
+        title={"Delete Task"}
+        content={"Are you sure?"}
+      />
 
     </Grid>
   )

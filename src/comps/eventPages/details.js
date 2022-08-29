@@ -10,19 +10,19 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { shorten_a_string } from '../../features/functions/string'
 import { countDays } from '../../features/functions/countDays';
 import EventModal from '../../forms/eventModal';
-import MessagesModal from '../../forms/messagesModal';
-
+import MessagesModal from '../../forms/alert';
+import Alert from '../../forms/alert'
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
 
 export default function Details({ event }) {
+
   const [des, setDes] = useState("")
   const [date, setDate] = useState()
   const [days, setDays] = useState('')
   const [isCreationModeEvent, setIsCreationModeEvent] = useState(false)
   const [isEditModeEvent, setIsEditModeEvent] = useState(false)
-  const [deleteItem, setDeleteItem] = useState(false);
-
+  const [isDeleteEvent, setIsDeleteEvent] = useState(false);
 
   useEffect(() => {
     let str;
@@ -41,7 +41,7 @@ export default function Details({ event }) {
         boxShadow: 1,
         bgcolor: 'white',
         borderRadius: 2,
-        height: '42vh',
+        // height: '42vh',
         p: 1,
         display: 'flex',
         flexWrap: 'wrap',
@@ -60,7 +60,7 @@ export default function Details({ event }) {
         </IconButton>
 
         <IconButton onClick={() => {
-          setDeleteItem(true)
+          setIsDeleteEvent(true)
         }}>
           <DeleteOutlinedIcon fontSize="small" />
         </IconButton>
@@ -74,8 +74,8 @@ export default function Details({ event }) {
       }}>
         <Grid item xs={12} sx={{ pb: 8 }}>
           <Typography variant='h5' sx={{ fontWeight: 700, pt: 0 }}>{event.title}</Typography>
-          <Typography variant='body2' sx={{ fontWeight: 700, py: 1, color: "gray" }}>created by:{event.user_id?.name}</Typography>
-          <Typography variant="subtitle2">{event.description}</Typography>
+          <Typography variant='body2' sx={{ fontWeight: 700, py: 1, color: "gray" }}>created by: {event.user_id?.name}</Typography>
+          <Typography variant="h6">{event.description}</Typography>
         </Grid>
 
         <Grid item xs={12} sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
@@ -97,11 +97,14 @@ export default function Details({ event }) {
         setIsCreationModeEvent={setIsCreationModeEvent}
         event={event}
       />
-      <MessagesModal
-        deleteItem={deleteItem}
-        setDeleteItem={setDeleteItem}
-        event={event}
-      />
+      <Alert
+        title={"Delete Event"}
+        content={"Are you sure?"}
+        isDeleteEvent={isDeleteEvent}
+        setIsDeleteEvent={setIsDeleteEvent}
+        event={event} />
+
+
     </Container>
   )
 }
