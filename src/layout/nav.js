@@ -9,17 +9,19 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Logout from '../comps/logout';
-import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom'
 
 export default function Nav() {
 
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const nav = useNavigate();
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (_linkTo) => {
+    nav(_linkTo)
     setAnchorEl(null);
   };
   return (
@@ -55,9 +57,12 @@ export default function Nav() {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <Link to={"/profile"} onClick={handleClose}>Profile</Link>
-              <Link to={"/logout"} onClick={handleClose}>Log Out</Link>
-
+              <MenuItem onClick={() => {
+                handleClose("/profile")
+              }}>Profile</MenuItem>
+              <MenuItem onClick={() => {
+                handleClose("/logout")
+              }}>Logout</MenuItem>
             </Menu>
           </div>
 
