@@ -10,16 +10,13 @@ import HoverRating from './rating';
 import './forms.css'
 import { postNewTask, editTask } from '../features/slices/tasksSlice';
 
-
-
 export default function TaskForm(props) {
 
   const dispatch = useDispatch();
   const params = useParams();
   const currentEvent = useSelector((state) => state.eventsReducer.currentEvent);
-
+  const [owner, setOwner] = useState();
   let { register, handleSubmit, reset, formState: { errors } } = useForm();
-
 
   useEffect(() => {
     if (props.isCreationMode)
@@ -32,16 +29,15 @@ export default function TaskForm(props) {
         time: props.task.time,
         location: props.task.location
       }
-
       reset(body)
     }
   }, [props])
 
-
-
   const onSub = (_dataBody) => {
     console.log(_dataBody);
     const _id = params.idEvent;
+    if (owner != "")
+      _dataBody.usersId_arr = owner;
     if (props.isCreationMode) {
       _dataBody.weight = 1;
       _dataBody.status = 'Ready';
@@ -67,15 +63,15 @@ export default function TaskForm(props) {
       <form onSubmit={handleSubmit(onSub)}>
 
         <label >Title</label>
-        <input {...register('title', { required: true, minLength: 2, maxLength: 15 })} type="text" />
-        {errors.title && <small className='_error'>Enter valid name (min 2 chars)</small>}
+        <input {...register('title', { required: true, minLength: 2, maxLength: 99 })} type="text" />
+        {errors.title && <small className='_error'>Enter valid title (min 2 chars)</small>}
 
         <label >Description</label>
-        <textarea {...register('description', { required: true, minLength: 2, maxLength: 50 })} type="text" ></textarea>
-        {errors.description && <small className='_error'>Enter valid name (min 2 chars)</small>}
+        <textarea {...register('description', { required: false, minLength: 2, maxLength: 150 })} type="text" ></textarea>
+        {errors.description && <small className='_error'>Enter valid description (min 2 chars)</small>}
 
         <label >Date</label>
-        <input min={new Date().toISOString().slice(0, -8)} {...register('date', { required: true })} type="datetime-local" />
+        <input min={new Date().toISOString().slice(0, -8)} max={currentEvent.date} {...register('date', { required: true })} type="datetime-local" />
         {errors.date && <small className='_error'>Choose date</small>}
 
         {/* <label>Time:</label>
@@ -85,11 +81,12 @@ export default function TaskForm(props) {
         <input {...register('location', { required: false, minLength: 0 })} type="text" />
         {errors.location && <small className='_error'>Enter valid location</small>} */}
         {/* <HoverRating /> */}
-        <label >Choose participants</label>
+        <label> participant</label>
 
-        <select {...register('usersId_arr', { onChange: (e) => console.log(e) })}>
-          <option >Choose</option>
-
+        <select onChange={(e) => {
+          setOwner(e.target.value)
+        }}>
+          <option value={undefined}></option>
           {currentEvent.usersId_arr && currentEvent.usersId_arr.map(item => (
             <option value={item._id} key={item._id}> {item.name}</option>
           ))}
