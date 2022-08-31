@@ -11,6 +11,7 @@ import { deleteEvent } from '../features/slices/eventsSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deleteTask } from '../features/slices/tasksSlice';
+import { refusal } from '../features/slices/inviteesSlice';
 
 export default function Alert(props) {
   const [open, setOpen] = React.useState(false);
@@ -18,13 +19,11 @@ export default function Alert(props) {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const dispatch = useDispatch()
   const nav = useNavigate()
-  console.log(open)
+  console.log(props)
 
   useEffect(() => {
-    console.log(props.isDeleteTask);
-    if (props.isDeleteEvent || props.isDeleteTask) {
+    if (props.isDeleteEvent || props.isDeleteTask || props.isRefusal) {
       setOpen(true)
-
     }
   }, [props])
 
@@ -40,12 +39,24 @@ export default function Alert(props) {
       props.setIsDeleteTask(false)
       setOpen(false)
     }
+    if (props.isRefusal) {
+      console.log(props.invitation.email);
+      console.log(props.invitation.event_id._id);
+      let body = { email: props.invitation.email, event_id: props.invitation.event_id._id }
+      console.log(body);
+      dispatch(refusal(body))
+      props.setIsRefusal(false)
+      setOpen(false)
+    }
   };
+
   const handleClose = () => {
     if (props.isDeleteEvent)
       props.setIsDeleteEvent(false)
     if (props.isDeleteTask)
       props.setIsDeleteTask(false)
+    if (props.isRefusal)
+      props.setIsRefusal(false)
     setOpen(false);
 
   };
@@ -66,10 +77,10 @@ export default function Alert(props) {
         </DialogContent>
 
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
+          <Button onClick={handleClose}>
             Cancle
           </Button>
-          <Button onClick={handleClick} autoFocus>
+          <Button onClick={handleClick}>
             Agree
           </Button>
         </DialogActions>
