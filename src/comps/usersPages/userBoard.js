@@ -21,6 +21,7 @@ export default function UserBoard() {
     dispatch(getEventsByParticpant())
     dispatch(getCurrentUserInvitations())
     dispatch(getUserTasks())
+
   }, [])
 
   return (

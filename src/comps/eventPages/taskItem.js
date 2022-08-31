@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from "react-redux";
-
-import { Grid, Typography, Divider, AvatarGroup, Avatar, IconButton, MenuItem, FormControl, Select, Button, Stack } from '@mui/material'
+import { useDispatch } from "react-redux";
+import {
+  Grid, Typography, Divider, AvatarGroup, Avatar, IconButton, Button, Stack
+} from '@mui/material'
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
@@ -13,7 +14,6 @@ import Alert from '../../forms/alert'
 import { isTaskEditAllowed } from '../../features/functions/permissions';
 import './taskItem.css'
 // import { shorten_a_string } from '../../features/functions/string'
-
 
 export default function TaskItem(props) {
   const dispatch = useDispatch()
@@ -99,14 +99,12 @@ export default function TaskItem(props) {
       <Divider orientation="vertical" variant="middle" flexItem />
 
       <Grid item xs={8} ps={2}>
-
         {editTaskPermission && <Grid item sx={{
           display: 'flex',
           justifyContent: 'end',
         }}>
           <IconButton onClick={() => {
             setIsEditMode(true);
-
           }}>
             <ModeEditOutlinedIcon fontSize="small" />
           </IconButton>
@@ -149,11 +147,8 @@ export default function TaskItem(props) {
 
       <TaskModal
         task={props.task}
-        // isCreationMode={props.isCreationMode}
-        // setIsCreationMode={props.setIsCreationMode}
         isEditMode={isEditMode}
         setIsEditMode={setIsEditMode}
-
       />
       <Alert
         task={props.task}

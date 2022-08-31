@@ -2,10 +2,9 @@ import { Button, Stack, Grid, Typography, Divider } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom'
-import { getCurrentEvent } from '../features/slices/eventsSlice';
-import { getCurrentUser, login } from '../features/slices/userSlice';
+
+import { login } from '../features/slices/userSlice';
 import '../forms/forms.css'
 import SignUpForm from '../forms/signUpForm';
 
@@ -17,7 +16,6 @@ export default function Home() {
   const [isNew, setIsNew] = useState(false)
 
   useEffect(() => {
-
   }, [])
 
   useEffect(() => {
@@ -26,34 +24,28 @@ export default function Home() {
     }
   }, [currentUser])
 
-
   const onSub = (_dataBody) => {
     dispatch(login(_dataBody))
   }
 
   return (
     <Grid container sx={{
-      display: 'flex',
-      flexWrap: 'wrap',
       justifyContent: "center",
-      justifyItems: 'center',
-      alignItems: "center",
       alignContent: 'center',
       height: '100vh'
-
     }}
 
     >
-      <Grid item md={7} sx={{ paddingLeft: "20%" }}>
+      <Grid item xs={12} sx={{ textAlign: 'center', mb: 10 }}>
         <Typography variant='h1' color={'#1976d2'}>
           <strong>Into</strong>It
         </Typography>
-        <Typography variant='h4' color={'#1565c0'}>
-          let's do it together
+        <Typography variant='h5' color={'#1565c0'}>
+          let's do it together..
         </Typography>
-
       </Grid>
-      <Grid item md={3}>
+
+      <Grid item xs={8} sm={5} md={3}>
         <form onSubmit={handleSubmit(onSub)}>
           {/* <label >Email</label> */}
           <input placeholder='email'  {...register("email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })} type="email"></input>

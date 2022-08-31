@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
 import { API_URL, doApiGet, doApiMethod } from '../../services/apiService';
-
-
 
 export const getCurrentEventInvitees = createAsyncThunk(
   "invitees/getCurrentEventInvitees", async (event_id) => {
@@ -17,32 +16,35 @@ export const getCurrentUserInvitations = createAsyncThunk(
 );
 export const postNewinvitee = createAsyncThunk(
   "invitees/postNewinvitee", async (_payload) => {
-    console.log(_payload);
     let resp = await doApiMethod(API_URL + `/invitees/${_payload.event_id}`, "POST", _payload);
+    if (resp.code) {
+      return resp
+    }
     return resp.data;
   }
 );
 export const cancleInvitation = createAsyncThunk(
   "invitees/cancleInvitation", async (_payload) => {
-    console.log(_payload);
-    let resp = await doApiMethod(API_URL + `/invitees`, "DELETE", _payload);
+    let resp = await doApiMethod(API_URL + `/invitees`, "DELETE", _payload)
     return resp.data;
   }
 );
 export const refusal = createAsyncThunk(
   "invitees/refusal", async (_payload) => {
-    console.log(_payload);
     let resp = await doApiMethod(API_URL + `/invitees/refusal`, "DELETE", _payload);
+    return resp.data;
+  }
+);
+export const approveInvitation = createAsyncThunk(
+  "invitees/approveInvitation", async (_payload) => {
+    let resp = await doApiMethod(API_URL + `/invitees/approve/${_payload.event_id}`, "PUT", _payload);
     return resp.data;
   }
 );
 
 
-
-
-export const userSlice = createSlice({
+export const inviteesSlice = createSlice({
   name: 'invitees',
-
   initialState: {
     currentEventInvitees: [],
     currentUserInvitations: [],
@@ -51,7 +53,6 @@ export const userSlice = createSlice({
 
   },
   reducers: {
-
   },
 
   extraReducers(builder) {
@@ -115,13 +116,11 @@ export const userSlice = createSlice({
 
         state.currentEventInvitees = state.currentEventInvitees.filter((item) => (item._id != action.payload))
 
-
       })
       .addCase(cancleInvitation.rejected, (state, action) => {
         console.log(action);
         state.status = "failed";
       })
-
       .addCase(refusal.pending, (state, action) => {
         state.status = "loading";
       })
@@ -137,13 +136,26 @@ export const userSlice = createSlice({
       .addCase(refusal.rejected, (state, action) => {
         state.status = "failed";
       })
-  }
 
+
+      .addCase(approveInvitation.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(approveInvitation.fulfilled, (state, action) => {
+        state.status = "success";
+        state.errors = null
+        console.log(action.payload);
+        state.eventsByParticpant.unshift(action.payload);
+
+      })
+      .addCase(approveInvitation.rejected, (state, action) => {
+        state.status = "failed";
+      })
+
+  }
 
 });
 
-
 // Action creators are generated for each case reducer function
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions
-
-export default userSlice.reducer
+export const { approve } = inviteesSlice.actions;
+export default inviteesSlice.reducer

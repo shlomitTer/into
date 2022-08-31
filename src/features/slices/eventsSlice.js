@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { API_URL, doApiGet, doApiMethod } from '../../services/apiService';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+import { API_URL, doApiGet, doApiMethod } from '../../services/apiService';
 
 
 export const getEventsByCreator = createAsyncThunk(
@@ -39,6 +39,7 @@ export const deleteEvent = createAsyncThunk(
     return resp.data;
   }
 );
+
 // export const editTitle = createAsyncThunk(
 //   "events/editTitle", async (_payload) => {
 //     // console.log(state)
@@ -50,15 +51,14 @@ export const deleteEvent = createAsyncThunk(
 // );
 
 
-
 export const eventsSlice = createSlice({
   name: 'events',
 
   initialState: {
-    eventsByCreator: [],
-    eventsByParticpant: [],
-    currentEvent: {},
-    usersOfCurrentEvent: [],
+    eventsByCreator: undefined,
+    eventsByParticpant: undefined,
+    currentEvent: undefined,
+    usersOfCurrentEvent: undefined,
     status: null,
   },
   reducers: {
@@ -78,7 +78,6 @@ export const eventsSlice = createSlice({
         state.status = "failed";
       })
 
-
       .addCase(getEventsByParticpant.pending, (state, action) => {
         state.status = "loading";
       })
@@ -89,7 +88,6 @@ export const eventsSlice = createSlice({
       .addCase(getEventsByParticpant.rejected, (state, action) => {
         state.status = "failed";
       })
-
 
 
       .addCase(getCurrentEvent.pending, (state, action) => {
@@ -105,7 +103,6 @@ export const eventsSlice = createSlice({
       .addCase(getCurrentEvent.rejected, (state, action) => {
         state.status = "failed";
       })
-
 
 
       .addCase(postNewEvent.pending, (state, action) => {
@@ -164,15 +161,12 @@ export const eventsSlice = createSlice({
     //   state.status = "failed";
     // })
 
-
   }
-
 
 });
 
 export const {
   createNewEventItem,
 } = eventsSlice.actions;
-
 
 export default eventsSlice.reducer

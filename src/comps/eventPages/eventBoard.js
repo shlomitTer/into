@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import { Grid } from '@mui/material';
 import { useSelector, useDispatch } from "react-redux";
-import ParticipantsBoard from './participantsBoard'
-import TasksBoard from './tasksBoard'
 
 import '../../App.css'
+import TasksBoard from './tasksBoard'
+import ParticipantsBoard from './participantsBoard'
 import { getCurrentEvent } from '../../features/slices/eventsSlice';
 import { getCurrentEventTasks } from '../../features/slices/tasksSlice';
 import LeftArea from './leftArea';

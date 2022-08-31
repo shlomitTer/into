@@ -1,28 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-
-import { Grid, Typography, IconButton, Box, Stack, Button } from '@mui/material'
+import React, { useState } from 'react'
+import { Grid, Typography, IconButton } from '@mui/material'
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import EventItem from './eventItem';
 import EventModal from '../../forms/eventModal';
-import { aprove, getCurrentUserInvitations } from '../../features/slices/inviteesSlice';
-import { aproveInvitation, getEventsByParticpant, refusal } from '../../features/slices/eventsSlice';
-import { getCurrentUser } from '../../features/slices/userSlice';
 import InvitationItem from '../invitaions/invitationItem';
 
 export default function EventsOfUser(props) {
+
   const [isCreationModeEvent, setIsCreationModeEvent] = useState(false)
 
-  // const handleRefusal = () => {
-  //   // dispatch(refusal({ email: currentUser.email }))
-  //   setIsRefusal(true)
-
-  // }
-  // const handleAprove = (_event_id) => {
-  //   let _body = { email: currentUser.email, event_id: _event_id }
-  //   dispatch(aproveInvitation(_body))
-  //   dispatch(aprove(_body))
-  // }
 
   return (
     <React.Fragment>
@@ -30,14 +16,14 @@ export default function EventsOfUser(props) {
       {/* invitaions of currentUser */}
       {(props.currentUserInvitations.length != 0) && <Typography variant='h5' xs={2}>New Events</Typography>
       }
-      {/* <Grid container >
+      <Grid container >
         {(props.currentUserInvitations.length != 0) && props.currentUserInvitations.map(item => (
           <InvitationItem
             invitation={item}
+            currentUser={props.currentUser}
           />
         ))}
-      </Grid> */}
-
+      </Grid>
 
       <Grid item
         sx={{
@@ -58,7 +44,6 @@ export default function EventsOfUser(props) {
         />
 
       </Grid>
-
 
       {/* eventsByParticpant of currentUser */}
       <Grid container
@@ -84,7 +69,6 @@ export default function EventsOfUser(props) {
           }}>let's create your first event</h4>}
 
       </Grid >
-
 
     </React.Fragment>)
 }

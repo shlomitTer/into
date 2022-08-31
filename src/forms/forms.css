@@ -11,6 +11,15 @@ input,textarea, select {
   box-sizing: border-box;
   box-shadow: 8px 8px 12px -10px rgba(66, 68, 90, 1);
 }
+._label {
+  display: inline!important;
+}
+
+/* input[type="checkbox"]
+{
+    vertical-align:middle;
+    display: inline-block;
+} */
 
 label{
   display: block;

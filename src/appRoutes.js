@@ -7,13 +7,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import Home from './comps/home';
 import Layout from './layout/layout';
 import TaskPage from './comps/tasks/taskPage';
-
 import EventBoard from './comps/eventPages/eventBoard';
 import UserBoard from './comps/usersPages/userBoard';
-import InvitationBoard from './comps/invite.js/invitationBoard';
+import InvitationBoard from './comps/invitaions/invitationBoard';
 import Logout from './comps/logout';
-
-
 
 export default function AppRoutes() {
   return (

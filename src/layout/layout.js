@@ -8,7 +8,7 @@ export default function Layout() {
   return (
     <React.Fragment>
       <Nav />
-      <Container maxWidth sx={{ mt: '70px' }}>
+      <Container maxWidth='xl' sx={{ mt: '70px' }}>
         <Outlet />
       </Container>
 

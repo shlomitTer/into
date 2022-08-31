@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
 import { API_URL, doApiGet, doApiMethod } from '../../services/apiService';
-
-
 
 export const getCurrentUser = createAsyncThunk(
   "user/getCurrentUser", async (dispatch, getState) => {
@@ -22,9 +21,6 @@ export const signUp = createAsyncThunk(
   }
 );
 
-
-
-
 export const userSlice = createSlice({
   name: 'user',
 
@@ -36,7 +32,6 @@ export const userSlice = createSlice({
     logout: (state, action) => {
       state.currentUser = undefined
     }
-
   },
 
   extraReducers(builder) {
@@ -51,8 +46,6 @@ export const userSlice = createSlice({
         state.currentUser = action.payload;
 
         if (action.payload.message) state.currentUser = undefined;
-
-
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.status = "failed";
@@ -87,10 +80,7 @@ export const userSlice = createSlice({
         state.status = "failed";
       })
 
-
-
   }
-
 
 });
 
