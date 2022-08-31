@@ -28,11 +28,11 @@
   background-color: rgb(196, 58, 58)!important;
 }
 ._yellow{
- background-color: rgb(234, 234, 11)!important;
+ background-color: orange!important;
  font-size:11px!important;
  color: white!important;
  border:none!important;
 }
 ._yellow:hover{
-  background-color: rgb(250, 250, 61)!important;
+  background-color: rgb(255, 196, 86)!important;
 }

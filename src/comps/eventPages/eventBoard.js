@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-
-import { Container, Grid } from '@mui/material'
-
-import DashBoard from './dashBoard'
 import ParticipantsBoard from './participantsBoard'
 import TasksBoard from './tasksBoard'
 
 import '../../App.css'
 import { getCurrentEvent } from '../../features/slices/eventsSlice';
 import { getCurrentEventTasks } from '../../features/slices/tasksSlice';
-import Details from './details';
 import LeftArea from './leftArea';
+import { isEditEventAllowed } from '../../features/functions/permissions';
+import { getCurrentUser } from '../../features/slices/userSlice';
 
 export default function EventBoard() {
 
@@ -22,25 +19,20 @@ export default function EventBoard() {
   const currentEventTasks = useSelector((state) => state.tasksReducer.currentEventTasks);
   const usersOfCurrentEvent = useSelector((state) => state.eventsReducer.usersOfCurrentEvent);
   const params = useParams();
-  const [isEditEventAllowed, setIsEditEventAllowed] = useState(false);
+  const [editEventpermission, setEditEventpermission] = useState(false)
 
   useEffect(() => {
-    doApi();
-
-  }, [])
-
-  const doApi = () => {
     dispatch(getCurrentEvent(params.idEvent));
     dispatch(getCurrentEventTasks(params.idEvent));
-  }
+    dispatch(getCurrentUser())
+  }, [])
 
-  // useEffect(() => {
-
-  //   //check if user can edit event
-  //   if (currentEvent?.user_id == currentUser?._id ||
-  //     (currentEvent?.usersId_arr.includes(currentUser?._id) && currentEvent?.EditableByParticipants))
-  //     setIsEditEventAllowed(true);
-  // }, [currentEvent, currentUser])
+  //Editing permission check 
+  useEffect(() => {
+    if (currentEvent && currentUser) {
+      setEditEventpermission(isEditEventAllowed(currentEvent, currentUser._id, currentUser._id))
+    }
+  }, [currentEvent, currentUser])
 
   return (
     <Grid container spacing={2}
@@ -54,19 +46,23 @@ export default function EventBoard() {
 
       <Grid item md={3} xs={11} >
         <LeftArea
-          event={currentEvent}
-          isEditEventAllowed={isEditEventAllowed} />
+          editEventpermission={editEventpermission}
+        />
       </Grid>
 
       <Grid item md={5} xs={11}>
         <TasksBoard
-          tasks={currentEventTasks}
-          currentEvent={currentEvent} />
+          editEventpermission={editEventpermission}
+          currentEvent={currentEvent}
+          currentUser={currentUser}
+          currentEventTasks={currentEventTasks}
+        />
       </Grid>
 
       <Grid item md={3} xs={11} elevation={3}>
         <ParticipantsBoard
-          users={usersOfCurrentEvent}
+          editEventpermission={editEventpermission}
+          usersOfCurrentEvent={usersOfCurrentEvent}
         />
       </Grid>
 

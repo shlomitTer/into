@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux";
+import { useParams } from 'react-router-dom';
 
 import { Container, Grid, IconButton, Typography } from '@mui/material'
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { createTheme, responsiveFontSizes, ThemeProvider, } from '@mui/material/styles';
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
@@ -10,29 +10,33 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { shorten_a_string } from '../../features/functions/string'
 import { countDays } from '../../features/functions/countDays';
 import EventModal from '../../forms/eventModal';
-import MessagesModal from '../../forms/alert';
 import Alert from '../../forms/alert'
+import { getCurrentEvent } from '../../features/slices/eventsSlice';
+
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
 
-export default function Details({ event }) {
+export default function Details({ editEventpermission }) {
 
   const [des, setDes] = useState("")
-  const [date, setDate] = useState()
+  const [date, setDate] = useState('00/00/00')
   const [days, setDays] = useState('')
-  const [isCreationModeEvent, setIsCreationModeEvent] = useState(false)
   const [isEditModeEvent, setIsEditModeEvent] = useState(false)
   const [isDeleteEvent, setIsDeleteEvent] = useState(false);
+  const currentEvent = useSelector((state) => state.eventsReducer.currentEvent);
+  const dispatch = useDispatch()
+  const params = useParams();
 
   useEffect(() => {
-    let str;
-    event?.description && setDes(shorten_a_string(event.description, 4));
+    dispatch(getCurrentEvent(params.idEvent));
+  }, [])
 
-    let _date = new Date(event.date).toLocaleDateString()
+  useEffect(() => {
+    currentEvent?.description && setDes(shorten_a_string(currentEvent?.description, 20));
+    let _date = new Date(currentEvent?.date).toLocaleDateString()
     setDate(_date)
-
-    setDays(countDays(event.date))
-  }, [event])
+    setDays(countDays(currentEvent?.date))
+  }, [currentEvent])
 
 
   return (
@@ -48,10 +52,9 @@ export default function Details({ event }) {
         alignContent: 'start',
       }}>
 
-      <Grid item xs={12} sx={{
+      {editEventpermission && <Grid item xs={12} sx={{
         display: 'flex',
-        justifyContent: 'end',
-
+        justifyContent: 'end'
       }}>
         <IconButton onClick={() => {
           setIsEditModeEvent(true)
@@ -64,7 +67,7 @@ export default function Details({ event }) {
         }}>
           <DeleteOutlinedIcon fontSize="small" />
         </IconButton>
-      </Grid>
+      </Grid>}
 
       <Grid item xs={12} sx={{
         display: 'flex',
@@ -73,37 +76,35 @@ export default function Details({ event }) {
         height: '42vh'
       }}>
         <Grid item xs={12} sx={{ pb: 8 }}>
-          <Typography variant='h5' sx={{ fontWeight: 700, pt: 0 }}>{event.title}</Typography>
-          <Typography variant='body2' sx={{ fontWeight: 700, py: 1, color: "gray" }}>created by: {event.user_id?.name}</Typography>
-          <Typography variant="h6">{event.description}</Typography>
+          <Typography variant='h5' sx={{ fontWeight: 700, pt: 0 }}>{currentEvent?.title}</Typography>
+          <Typography variant='body2' sx={{ fontWeight: 700, py: 1, color: "gray" }}>created by: {currentEvent?.user_id?.name}</Typography>
+          <Typography variant="h6">{des}</Typography>
         </Grid>
 
-        <Grid item xs={12} sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+        <Grid item xs={12} sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
 
-          <Grid item xs={6} sx={{}}>
-            <Typography variant="h5" sx={{ paddingRight: 5, fontWeight: 700 }}>{date}</Typography>
+          <Grid item xs={6}>
+            <Typography variant="h6" sx={{ paddingRight: 5, fontWeight: 700 }}>{date}</Typography>
           </Grid>
 
-          <Grid item xs={6} sx={{ textAlign: 'center' }} >
-            <AccessTimeIcon fontSize="medium" />
-            <Typography variant="body2" sx={{ pt: 1, display: "inline" }} color={days.color}>{days.str} </Typography>
+          <Grid item xs={5} sx={{ textAlign: 'center' }} >
+            {/* <AccessTimeIcon fontSize="medium" /> */}
+            <Typography variant="body2" sx={{ pt: 1 }} color={days.color}>{days.str} </Typography>
           </Grid>
         </Grid>
       </Grid>
       <EventModal
         isEditModeEvent={isEditModeEvent}
         setIsEditModeEvent={setIsEditModeEvent}
-        isCreationModeEvent={isCreationModeEvent}
-        setIsCreationModeEvent={setIsCreationModeEvent}
-        event={event}
+        event={currentEvent}
       />
       <Alert
         title={"Delete Event"}
         content={"Are you sure?"}
         isDeleteEvent={isDeleteEvent}
         setIsDeleteEvent={setIsDeleteEvent}
-        event={event} />
-
+        event={currentEvent}
+      />
 
     </Container>
   )

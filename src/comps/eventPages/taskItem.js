@@ -7,10 +7,10 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 import { stringAvatar } from '../../features/functions/avatarStringColor'
 import { patchStatus } from '../../features/slices/tasksSlice';
-
 import { countDays } from '../../features/functions/countDays';
 import TaskModal from '../../forms/TaskModal';
 import Alert from '../../forms/alert'
+import { isTaskEditAllowed } from '../../features/functions/permissions';
 import './taskItem.css'
 // import { shorten_a_string } from '../../features/functions/string'
 
@@ -26,6 +26,16 @@ export default function TaskItem(props) {
     InProgress: false,
     Done: false
   });
+  const [editTaskPermission, setEditTaskPermission] = useState(false)
+
+  //Editing permission check 
+  useEffect(() => {
+    if (props.isUserTask)
+      setEditTaskPermission(true)
+    if (props.currentEvent && props.currentUser) {
+      setEditTaskPermission(isTaskEditAllowed(props.currentEvent, props.task, props.currentUser._id))
+    }
+  }, [props.currentEvent, props.currentUser, props.isUserTask])
 
   useEffect(() => {
     let tempStatus = {
@@ -79,38 +89,18 @@ export default function TaskItem(props) {
           display: 'flex',
           alignItems: 'center'
         }}>
-        {/* <FormControl variant="standard" sx={{ width: '80%' }}>
-          <Select
-            fullWidth
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            defaultValue={props.task.status}
-            onChange={handleChange(props.task._id)}
-            label="status"
-            sx={{
-              fontSize: '11px',
-            }}
-          >
-            <MenuItem value="Ready">Ready</MenuItem>
-            <MenuItem value="InProgress">In Progress</MenuItem>
-            <MenuItem value="Done">Done</MenuItem>
 
-          </Select>
-        </FormControl> */}
         <Stack spacing={2} sx={{}}>
-          <Button onClick={() => { handleClick(props.task._id, "Ready") }} className={`${icon.Ready ? '_red' : 'btn'}`}>Ready</Button>
-          <Button onClick={() => { handleClick(props.task._id, "InProgress") }} className={`${icon.InProgress ? '_yellow' : 'btn'}`}>In Progress</Button>
-          <Button onClick={() => { handleClick(props.task._id, "Done") }} className={`${icon.Done ? '_green' : 'btn'}`}>Done</Button>
+          <Button onClick={() => { handleClick(props.task._id, "Ready") }} className={`${icon.Ready ? '_red' : 'btn'}`} disabled={!editTaskPermission}>Ready</Button>
+          <Button onClick={() => { handleClick(props.task._id, "InProgress") }} className={`${icon.InProgress ? '_yellow' : 'btn'}`} disabled={!editTaskPermission}>In Progress</Button>
+          <Button onClick={() => { handleClick(props.task._id, "Done") }} className={`${icon.Done ? '_green' : 'btn'}`} disabled={!editTaskPermission}>Done</Button>
         </Stack>
-        {/* {icon.Ready && <PendingIcon fontSize='large' color='error' />}
-        {icon.InProgress && <SyncIcon fontSize='large' color='warning' />}
-        {icon.Done && <TaskAltIcon fontSize='large' color='success' />} */}
       </Grid>
       <Divider orientation="vertical" variant="middle" flexItem />
 
-      <Grid item xs={8} px={2}>
+      <Grid item xs={8} ps={2}>
 
-        <Grid item sx={{
+        {editTaskPermission && <Grid item sx={{
           display: 'flex',
           justifyContent: 'end',
         }}>
@@ -126,7 +116,7 @@ export default function TaskItem(props) {
           }}>
             <DeleteOutlinedIcon fontSize="small" />
           </IconButton>
-        </Grid>
+        </Grid>}
         <Typography variant='h6'>{props.task.title}</Typography>
         <Typography variant='body1' sx={{ height: '47px' }}>{props.task.description}</Typography>
         <Grid item sx={{
@@ -137,15 +127,15 @@ export default function TaskItem(props) {
           alignContent: 'space-between',
           alignItems: 'center',
         }}>
-          <Grid item xs={12} xl={4} >
+          <Grid item xs={4}  >
             <Typography variant='body2' sx={{ textAlign: 'center' }}>{date}</Typography>
           </Grid>
 
-          <Grid item xs={12} xl={4} sx={{ textAlign: 'center' }} >
+          <Grid item xs={4} sx={{ textAlign: 'center' }} >
             <Typography variant='body2' color={days.color}>{days.str}</Typography>
           </Grid>
 
-          <Grid item xs={12} xl={4} px={5}>
+          <Grid item xs={4} >
             <AvatarGroup max={2}>
               {props.task.usersId_arr && props.task.usersId_arr.map(user => (
 

@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-
-import { Grid, Typography, IconButton } from '@mui/material'
-
-import { getUserTasks } from '../../features/slices/tasksSlice';
+import { Grid, Typography } from '@mui/material'
 import TaskItem from '../eventPages/taskItem';
 
 export default function TasksOfUser(props) {
   const [todo, setTodo] = useState([]);
-
+  const isUserTask = true;
   useEffect(() => {
     let ar = props.userTasks.filter((item) => item.status !== "Done")
     setTodo(ar)
@@ -25,7 +21,10 @@ export default function TasksOfUser(props) {
 
       <Grid item>
         {todo && todo.map(task => (
-          <TaskItem key={task._id} task={task}
+          <TaskItem
+            key={task._id
+            } task={task}
+            isUserTask={isUserTask}
           />
         ))
         }
