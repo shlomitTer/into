@@ -3,8 +3,7 @@ import React from 'react'
 import DashBoard from './dashBoard'
 import Details from './details'
 
-export default function LeftArea({ event,
-  isEditEventAllowed }) {
+export default function LeftArea(props) {
   return (
     <Grid container
       sx={{
@@ -12,8 +11,8 @@ export default function LeftArea({ event,
         top: 2
       }}>
       <Details
-        event={event}
-        isEditEventAllowed={isEditEventAllowed} />
+        editEventpermission={props.editEventpermission}
+      />
       <DashBoard />
     </Grid>
   )

@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect } from 'react'
+import { useDispatch } from "react-redux";
 import { useForm } from 'react-hook-form';
-
 import { Button, Stack, Typography, Box } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 import './forms.css'
 import { editEvent, postNewEvent } from '../features/slices/eventsSlice';
-
-
 
 export default function EventForm(props) {
 
@@ -29,12 +26,8 @@ export default function EventForm(props) {
         location: props.event.location
       }
       reset(body)
-
     }
   }, [props.event])
-
-
-
 
   const onSub = (_dataBody) => {
     if (props.isCreationModeEvent)
@@ -43,10 +36,15 @@ export default function EventForm(props) {
       let _id = props.event._id;
       dispatch(editEvent({ _id, _dataBody }))
     }
-    props.handleClose();
-
+    handleClose();
   }
-
+  const handleClose = () => {
+    props.setOpen(false);
+    if (props.isEditModeEvent)
+      props.setIsEditModeEvent(false)
+    if (props.isCreationModeEvent)
+      props.setIsCreationModeEvent(false)
+  }
   return (
     <Box >
       {props.isCreationModeEvent && <Typography variant='h3'>New Event</Typography>}
@@ -54,12 +52,12 @@ export default function EventForm(props) {
       <form onSubmit={handleSubmit(onSub)}>
 
         <label >Title</label>
-        <input {...register('title', { required: true, minLength: 2, maxLength: 15 })} type="text" />
-        {errors.title && <small className='_error'>Enter valid name (min 2 chars)</small>}
+        <input {...register('title', { required: true, minLength: 2, maxLength: 99 })} type="text" />
+        {errors.title && <small className='_error'>Enter valid title (min 2 chars)</small>}
 
         <label >Description</label>
-        <textarea {...register('description', { required: true, minLength: 2, maxLength: 50 })} type="text" ></textarea>
-        {errors.description && <small className='_error'>Enter valid name (min 2 chars)</small>}
+        <textarea {...register('description', { required: false, minLength: 2, maxLength: 150 })} type="text" ></textarea>
+        {errors.description && <small className='_error'>Enter valid description (min 2 chars)</small>}
 
         <label >Date</label>
         <input min={new Date().toISOString().slice(0, -8)} {...register('date', { required: true })} type="datetime-local" />
@@ -72,6 +70,12 @@ export default function EventForm(props) {
         <label >Location:</label>
         <input {...register('location', { required: false, minLength: 0 })} type="text" />
         {errors.location && <small className='_error'>Enter valid location</small>}
+        <div>
+          <label className='_lable'>
+            <input type="checkbox" id='permission' name='permission' {...register('EditableByParticipants')} />
+            Allow participants to edit the event</label>
+        </div>
+
 
         <Stack
           spacing={2}
@@ -79,7 +83,7 @@ export default function EventForm(props) {
           justifyContent="end"
           alignItems="baseline"
         >
-          <Button variant="text" onClick={props.handleClose}>Cancel</Button>
+          <Button variant="text" onClick={handleClose}>Cancel</Button>
 
           {props.isCreationModeEvent ?
             <Button variant="text" type='submit'>Create</Button> :

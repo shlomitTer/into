@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Grid, Typography } from '@mui/material'
+
 import TaskItem from '../eventPages/taskItem';
 
 export default function TasksOfUser(props) {
   const [todo, setTodo] = useState([]);
   const isUserTask = true;
   useEffect(() => {
-    let ar = props.userTasks.filter((item) => item.status !== "Done")
-    setTodo(ar)
+    let todoTasks = props.userTasks.filter((item) => item.status !== "Done")
+    setTodo(todoTasks)
   }, [props.userTasks])
 
   return (
