@@ -5,7 +5,6 @@ import { useTheme } from '@mui/material/styles';
 
 import EventForm from './eventForm';
 
-
 export default function EventModal(props) {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -16,11 +15,11 @@ export default function EventModal(props) {
       setOpen(true)
   }, [props])
 
-
-
   const handleClose = () => {
-    props.setIsEditModeEvent(false)
-    props.setIsCreationModeEvent(false)
+    if (props.isEditModeEvent)
+      props.setIsEditModeEvent(false)
+    else
+      props.setIsCreationModeEvent(false)
     setOpen(false);
   }
 
@@ -37,10 +36,11 @@ export default function EventModal(props) {
         <div style={{ padding: '40px 30px' }}>
           <EventForm
             event={props?.event}
-            handleClose={handleClose}
-            isCreationModeEvent={props.isCreationModeEvent}
-            isEditModeEvent={props.isEditModeEvent}
-
+            isCreationModeEvent={props?.isCreationModeEvent}
+            setIsCreationModeEvent={props?.setIsCreationModeEvent}
+            isEditModeEvent={props?.isEditModeEvent}
+            setIsEditModeEvent={props?.setIsEditModeEvent}
+            setOpen={setOpen}
           />
         </div>
       </Dialog>
