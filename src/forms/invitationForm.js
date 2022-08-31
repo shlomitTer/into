@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import Backdrop from '@mui/material/Backdrop';
-import { Box, Stack, Button, Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify';
+import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
+import Backdrop from '@mui/material/Backdrop';
+import { Box, Stack, Button, Typography } from '@mui/material';
+import { useForm } from 'react-hook-form';
 
-
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { postNewinvitee } from '../features/slices/inviteesSlice';
+import { getCurrentEventInvitees, postNewinvitee } from '../features/slices/inviteesSlice';
 import './forms.css'
 
 const style = {
@@ -23,9 +23,14 @@ const style = {
   p: 4,
 };
 export default function InvitationForm(props) {
-  let { register, handleSubmit, reset, formState: { errors } } = useForm();
 
+  let { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const inviteesErrors = useSelector((state) => state.inviteeReducer.errors)
+  const currentEvent = useSelector((state) => state.eventsReducer.currentEvent);
+  const currentUser = useSelector((state) => state.userReducer.currentUser);
+  const currentEventInvitees = useSelector((state) => state.inviteeReducer.currentEventInvitees)
   const [open, setOpen] = useState(false);
+  const [emails, setEmails] = useState([]);
   // const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const dispatch = useDispatch()
@@ -38,7 +43,20 @@ export default function InvitationForm(props) {
     reset({})
   }, [props])
 
+  useEffect(() => {
+    dispatch(getCurrentEventInvitees(params.idEvent))
+  }, [])
+
+  useEffect(() => {
+    let usersAndInvieesList = [...currentEventInvitees, ...currentEvent.usersId_arr]
+    let usersAndInvieesListEmail = usersAndInvieesList.map(item => item.email)
+    setEmails(usersAndInvieesListEmail)
+  }, [currentEventInvitees])
+
   const onSub = (_dataBody, e) => {
+    if (emails.includes(_dataBody.email)) {
+      toast.error("Email already exists")
+    }
     _dataBody.event_name = props.event.title;
     _dataBody.creator = props.event.user_id.name;
     _dataBody.user_id = props.event.user_id._id;
@@ -47,7 +65,7 @@ export default function InvitationForm(props) {
     dispatch(postNewinvitee(_dataBody))
     setOpen(false)
     props.setIsInvites(false)
-    e.target.reset();
+    e.target.reset({});
   };
 
   const handleClose = () => {
