@@ -7,6 +7,7 @@ import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { signUp } from '../features/slices/userSlice';
+import { toast } from 'react-toastify';
 
 export default function SignUpForm(props) {
   const [open, setOpen] = React.useState(false);
@@ -30,7 +31,11 @@ export default function SignUpForm(props) {
   const onSub = (_dataBody) => {
     dispatch(signUp(_dataBody))
     if (currentUser) {
+      toast.success('signUp successfully')
       nav(`/profile`)
+    }
+    else {
+      //to do:handling with possible errors
     }
 
   };
@@ -38,8 +43,7 @@ export default function SignUpForm(props) {
   const handleClose = () => {
     props.setIsNew(false)
     setOpen(false);
-
-  };
+  }
 
   return (
     <div>
@@ -77,7 +81,7 @@ export default function SignUpForm(props) {
             alignItems="baseline"
             sx={{ pt: 3 }}
           >
-            <Button variant="text" onClick={props.handleClose}>Cancel</Button>
+            <Button variant="text" onClick={handleClose}>Cancel</Button>
             <Button variant="text" type='submit'>Sign Up</Button>
 
           </Stack>
