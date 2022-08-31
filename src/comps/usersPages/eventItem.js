@@ -1,34 +1,29 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-import { Grid, Typography, Box, AvatarGroup, Avatar, Button } from '@mui/material'
+import { Grid, Typography, AvatarGroup, Avatar } from '@mui/material'
 import { stringAvatar } from '../../features/functions/avatarStringColor'
-
-export default function EventItem({ event, user }) {
+import './eventItem.css'
+export default function EventItem(props) {
   const [date, setDate] = useState();
   const [title, setTitle] = useState();
-  const [isCreator, setIsCreator] = useState(true);
-  const nav = useNavigate();
-
+  const [isEventCreator, setIsEventCreator] = useState(false)
 
   useEffect(() => {
-
-    if (event.user_id === user._id)
-      setIsCreator(true);
-
-    let _date = new Date(event.date).toLocaleDateString()
+    if (props.event.user_id._id === props.user._id)
+      setIsEventCreator(true);
+    let _date = new Date(props.event.date).toLocaleDateString()
     setDate(_date)
 
-    let _title = event.title
+    let _title = props.event.title
     _title = _title.toUpperCase();
-    // t = t.charAt(0).toUpperCase() + t.slice(1);
     setTitle(_title)
-  }, [])
+  }, [props])
 
   return (
 
 
-    <Grid item xs={12} md={5} sx={{
+    <Grid item xs={12} md={3} sx={{
       boxShadow: 1,
       borderRadius: 2,
       // height: '180px',
@@ -43,20 +38,22 @@ export default function EventItem({ event, user }) {
       '&:hover': {
         transform: "scale3d(1.01, 1.01, 1.01)",
       },
-    }} key={event._id} style={isCreator ? { background: '#EDFFE8' } : {}}>
+    }} className={`${isEventCreator && 'colored'}`} key={props.event._id}>
 
-      <Link to={`/event/${event._id}`} style={{
+      <Link to={`/event/${props.event._id}`} style={{
         textDecoration: "none",
         color: 'black'
       }}>
         <Grid item>
           <Typography variant='h6'>{title}</Typography>
+          <Typography variant='body2' sx={{ fontWeight: 700, py: 1, color: "gray" }}>created by: {props.event.user_id?.name}</Typography>
+
         </Grid>
         <Grid item>
           <Typography variant='body2'
             sx={{
               height: 50
-            }}>{event?.description}</Typography>
+            }}>{props.event?.description}</Typography>
         </Grid>
 
         <Grid item>
@@ -64,7 +61,7 @@ export default function EventItem({ event, user }) {
           <Typography>{date}</Typography>
         </Grid>
         <AvatarGroup max={3}>
-          {event.usersId_arr && event.usersId_arr.map(user => (
+          {props.event.usersId_arr && props.event.usersId_arr.map(user => (
             <Avatar
               key={user._id} {...stringAvatar(user?.name)} ></Avatar>
 

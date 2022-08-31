@@ -5,63 +5,38 @@ import { Grid, Typography, IconButton, Box, Stack, Button } from '@mui/material'
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import EventItem from './eventItem';
 import EventModal from '../../forms/eventModal';
-import { getCurrentUserInvitations, refusal } from '../../features/slices/inviteesSlice';
-import { getEventsByParticpant } from '../../features/slices/eventsSlice';
+import { aprove, getCurrentUserInvitations } from '../../features/slices/inviteesSlice';
+import { aproveInvitation, getEventsByParticpant, refusal } from '../../features/slices/eventsSlice';
 import { getCurrentUser } from '../../features/slices/userSlice';
+import InvitationItem from '../invitaions/invitationItem';
 
-export default function EventsOfUser() {
-  const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.userReducer.currentUser);
-  const eventsByParticpant = useSelector((state) => state.eventsReducer.eventsByParticpant);
-  const currentUserInvitations = useSelector((state) => state.inviteeReducer.currentUserInvitations)
+export default function EventsOfUser(props) {
   const [isCreationModeEvent, setIsCreationModeEvent] = useState(false)
 
-  const [isEditModeEvent, setIsEditModeEvent] = useState(false)
-  useEffect(() => {
-    dispatch(getCurrentUser())
-    dispatch(getEventsByParticpant())
-    dispatch(getCurrentUserInvitations())
-  }, [])
+  // const handleRefusal = () => {
+  //   // dispatch(refusal({ email: currentUser.email }))
+  //   setIsRefusal(true)
 
-  const handleRefusal = () => {
-    dispatch(refusal({ email: currentUser.email }))
-  }
+  // }
+  // const handleAprove = (_event_id) => {
+  //   let _body = { email: currentUser.email, event_id: _event_id }
+  //   dispatch(aproveInvitation(_body))
+  //   dispatch(aprove(_body))
+  // }
 
   return (
     <React.Fragment>
 
       {/* invitaions of currentUser */}
-      {(currentUserInvitations.length != 0) && <Typography variant='h5' xs={2}>New Events</Typography>
+      {(props.currentUserInvitations.length != 0) && <Typography variant='h5' xs={2}>New Events</Typography>
       }
-      <Grid container >
-        {(currentUserInvitations.length != 0) && currentUserInvitations.map(item => (
-          <Grid item key={item._id} xs={11}
-            sx={{
-              borderRadius: 2,
-              backgroundColor: 'white',
-              p: 2,
-              mt: 2,
-              '&:hover': {
-                transform: "scale3d(1.01, 1.01, 1.01)",
-              },
-            }}>
-
-            <Typography variant='h5'>{item.event_name}</Typography>
-            <Typography variant='body1'>creaed by: {item.creator} </Typography>
-            <Stack
-              spacing={2}
-              direction="row"
-              justifyContent="end"
-              alignItems="baseline"
-            >
-              <Button onClick={handleRefusal}>Refusal</Button>
-              <Button>Get</Button>
-            </Stack>
-          </Grid>
-        ))
-        }
-
-      </Grid>
+      {/* <Grid container >
+        {(props.currentUserInvitations.length != 0) && props.currentUserInvitations.map(item => (
+          <InvitationItem
+            invitation={item}
+          />
+        ))}
+      </Grid> */}
 
 
       <Grid item
@@ -80,8 +55,6 @@ export default function EventsOfUser() {
         <EventModal
           isCreationModeEvent={isCreationModeEvent}
           setIsCreationModeEvent={setIsCreationModeEvent}
-          isEditModeEvent={isEditModeEvent}
-          setIsEditModeEvent={setIsEditModeEvent}
         />
 
       </Grid>
@@ -96,19 +69,19 @@ export default function EventsOfUser() {
         }}
       >
 
-        {eventsByParticpant && eventsByParticpant.map(event => (
+        {props.eventsByParticpant && props.eventsByParticpant.map(event => (
           <EventItem
             event={event}
-            user={currentUser}
+            user={props.currentUser}
             key={event._id} />
         ))
         }
-        {(!eventsByParticpant || eventsByParticpant.length == 0) && <h4
+        {(!props.eventsByParticpant || props.eventsByParticpant.length == 0) && <h4
           style={{
-            padding: '12px',
+            paddingTop: '12px',
             color: '#d3d3d3',
-            fontSize: '40px'
-          }}>There are no events to display</h4>}
+            fontSize: '32px'
+          }}>let's create your first event</h4>}
 
       </Grid >
 
