@@ -41,7 +41,7 @@ export default function InvitationBoard() {
   return (
     <Container sx={{ pt: 10 }} maxWidth='md'>
       <Button onClick={() => {
-        nav(`-1`)
+        nav(-1)
       }}>  back </Button>
       <Stack
         direction="row"
