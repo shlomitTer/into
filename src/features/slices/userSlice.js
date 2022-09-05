@@ -1,22 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { API_URL, doApiGet, doApiMethod } from '../../services/apiService';
+import { config, doApiGet, doApiMethod } from '../../services/apiService';
+
+const URL = config.api.url
 
 export const getCurrentUser = createAsyncThunk(
   "user/getCurrentUser", async (dispatch, getState) => {
-    let resp = await doApiGet(API_URL + `/users/userInfo`);
+    let resp = await doApiGet(URL + `/users/userInfo`);
     return resp.data;
   }
 );
 export const login = createAsyncThunk(
   "user/login", async (_payload) => {
-    let resp = await doApiMethod(API_URL + `/users/login`, "POST", _payload);
+    let resp = await doApiMethod(URL + `/users/login`, "POST", _payload);
     return resp.data;
   }
 );
 export const signUp = createAsyncThunk(
   "user/signUp", async (_payload) => {
-    let resp = await doApiMethod(API_URL + `/users`, "POST", _payload);
+    let resp = await doApiMethod(URL + `/users`, "POST", _payload);
     return resp.data;
   }
 );

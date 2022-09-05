@@ -1,41 +1,43 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { API_URL, doApiGet, doApiMethod } from '../../services/apiService';
+import { config, doApiGet, doApiMethod } from '../../services/apiService';
+
+const URL = config.api.url
 
 
 export const getEventsByCreator = createAsyncThunk(
   "events/getEventsByCreator", async () => {
-    let resp = await doApiGet(API_URL + `/events/myEvents`);
+    let resp = await doApiGet(URL + `/events/myEvents`);
     return resp.data;
   }
 );
 export const getEventsByParticpant = createAsyncThunk(
   "events/getEventsByParticpant", async () => {
-    let resp = await doApiGet(API_URL + `/events/userEvents`);
+    let resp = await doApiGet(URL + `/events/userEvents`);
     return resp.data;
   }
 );
 export const getCurrentEvent = createAsyncThunk(
   "events/getCurrentEvent", async (event_id) => {
-    let resp = await doApiGet(API_URL + `/events/eventInfo/${event_id}`);
+    let resp = await doApiGet(URL + `/events/eventInfo/${event_id}`);
     return resp.data;
   }
 );
 
 export const postNewEvent = createAsyncThunk(
   "events/postNewEvent", async (_payload) => {
-    let resp = await doApiMethod(API_URL + `/events`, "POST", _payload);
+    let resp = await doApiMethod(URL + `/events`, "POST", _payload);
     return resp.data;
   }
 );
 export const editEvent = createAsyncThunk(
   "events/editEvent", async (_payload) => {
-    let resp = await doApiMethod(API_URL + `/events/editEvent/${_payload._id}`, "PUT", _payload._dataBody);
+    let resp = await doApiMethod(URL + `/events/editEvent/${_payload._id}`, "PUT", _payload._dataBody);
     return resp.data;
   });
 export const deleteEvent = createAsyncThunk(
   "events/deleteEvent", async (_payload) => {
-    let resp = await doApiMethod(API_URL + `/events/del/${_payload}`, "DELETE");
+    let resp = await doApiMethod(URL + `/events/del/${_payload}`, "DELETE");
     return resp.data;
   }
 );

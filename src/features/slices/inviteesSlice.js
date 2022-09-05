@@ -1,22 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { API_URL, doApiGet, doApiMethod } from '../../services/apiService';
+import { config, doApiGet, doApiMethod } from '../../services/apiService';
+
+const URL = config.api.url
 
 export const getCurrentEventInvitees = createAsyncThunk(
   "invitees/getCurrentEventInvitees", async (event_id) => {
-    let resp = await doApiGet(API_URL + `/invitees/${event_id}`);
+    let resp = await doApiGet(URL + `/invitees/${event_id}`);
     return resp.data;
   }
 );
 export const getCurrentUserInvitations = createAsyncThunk(
   "invitees/getCurrentUserInvitations", async () => {
-    let resp = await doApiGet(API_URL + `/invitees`);
+    let resp = await doApiGet(URL + `/invitees`);
     return resp.data;
   }
 );
 export const postNewinvitee = createAsyncThunk(
   "invitees/postNewinvitee", async (_payload) => {
-    let resp = await doApiMethod(API_URL + `/invitees/${_payload.event_id}`, "POST", _payload);
+    let resp = await doApiMethod(URL + `/invitees/${_payload.event_id}`, "POST", _payload);
     if (resp.code) {
       return resp
     }
@@ -25,19 +27,19 @@ export const postNewinvitee = createAsyncThunk(
 );
 export const cancleInvitation = createAsyncThunk(
   "invitees/cancleInvitation", async (_payload) => {
-    let resp = await doApiMethod(API_URL + `/invitees`, "DELETE", _payload)
+    let resp = await doApiMethod(URL + `/invitees`, "DELETE", _payload)
     return resp.data;
   }
 );
 export const refusal = createAsyncThunk(
   "invitees/refusal", async (_payload) => {
-    let resp = await doApiMethod(API_URL + `/invitees/refusal`, "DELETE", _payload);
+    let resp = await doApiMethod(URL + `/invitees/refusal`, "DELETE", _payload);
     return resp.data;
   }
 );
 export const approveInvitation = createAsyncThunk(
   "invitees/approveInvitation", async (_payload) => {
-    let resp = await doApiMethod(API_URL + `/invitees/approve/${_payload.event_id}`, "PUT", _payload);
+    let resp = await doApiMethod(URL + `/invitees/approve/${_payload.event_id}`, "PUT", _payload);
     return resp.data;
   }
 );
@@ -114,7 +116,7 @@ export const inviteesSlice = createSlice({
         state.status = "success";
         state.errors = null
 
-        state.currentEventInvitees = state.currentEventInvitees.filter((item) => (item._id != action.payload))
+        state.currentEventInvitees = state.currentEventInvitees.filter((item) => (item._id !== action.payload))
 
       })
       .addCase(cancleInvitation.rejected, (state, action) => {
@@ -131,7 +133,7 @@ export const inviteesSlice = createSlice({
 
         console.log(action.payload);
 
-        state.currentUserInvitations = state.currentUserInvitations.filter((item) => (item.email != action.payload))
+        state.currentUserInvitations = state.currentUserInvitations.filter((item) => (item.email !== action.payload))
       })
       .addCase(refusal.rejected, (state, action) => {
         state.status = "failed";

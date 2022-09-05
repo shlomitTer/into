@@ -1,6 +1,18 @@
 import axios from "axios";
 
-export const API_URL = "http://localhost:3005";
+const prod = {
+  api: {
+    url: "https://intoit-api-test.onrender.com"
+  }
+}
+const dev = {
+  api: {
+    url: "http://localhost:3005"
+  }
+};
+export const config = process.env.NODE_ENV === 'development' ? dev : prod;
+
+
 export const TOKEN_NAME = "into_token";
 
 
