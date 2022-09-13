@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from "react-redux";
 import { Grid, Typography, IconButton } from '@mui/material'
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import TaskModal from '../../forms/TaskModal';
@@ -10,15 +10,32 @@ import { getCurrentEventTasks, getSortedCurrentEventTasks } from '../../features
 export default function TasksBoard(props) {
   const dispatch = useDispatch();
   const [isCreationMode, setIsCreationMode] = useState(false);
+  const [tasks, setTasks] = useState();
+  const currentEventTasks = useSelector((state) => state.tasksReducer.currentEventTasks);
+  const currentEventSortedTasks = useSelector((state) => state.tasksReducer.currentEventSortedTasks);
+  const selectRef = useRef()
+  useEffect(() => {
+    setTasks(currentEventTasks)
+  }, [])
 
-  const handleChange = (e) => {
-    let status = e.target.value;
+  const handleChange = () => {
+    let status = selectRef.current.value;
     let event_id = props.currentEvent._id;
-    if (status == 'All')
+    if (status === 'All')
       dispatch(getCurrentEventTasks(event_id))
     else
       dispatch(getSortedCurrentEventTasks({ event_id, status }))
   };
+
+  useEffect(() => {
+    if (selectRef.current.value === '' || selectRef.current.value === 'All')
+      setTasks(currentEventTasks)
+    else {
+
+      setTasks(currentEventSortedTasks)
+    }
+  }, [currentEventTasks, currentEventSortedTasks])
+
 
   return (
     <Grid item >
@@ -42,7 +59,7 @@ export default function TasksBoard(props) {
           </IconButton>}
         </Grid>
         <Grid item xs={4}>
-          <select onChange={handleChange} name="status" style={{
+          <select ref={selectRef} onChange={handleChange} name="status" style={{
             fontSize: '14px',
             padding: '2px',
             boxShadow: 'none'
@@ -57,7 +74,7 @@ export default function TasksBoard(props) {
       </Grid>
       <Grid item>
 
-        {props.currentEventTasks && props.currentEventTasks.map(task => (
+        {tasks && tasks.map(task => (
           <TaskItem key={task._id}
             task={task}
             currentEvent={props.currentEvent}
@@ -65,7 +82,7 @@ export default function TasksBoard(props) {
           />
         ))
         }
-        {(!props.currentEventTasks || props.currentEventTasks.length == 0) && <h3
+        {(!tasks || tasks === 0) && <h3
           style={{
             paddingTop: '12px',
             color: '#d3d3d3',

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Grid, Typography } from '@mui/material'
 import { createTheme, responsiveFontSizes, ThemeProvider, } from '@mui/material/styles';
+import DoughnutChart from './chart';
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
 
@@ -24,10 +25,8 @@ export default function DashBoard({ event }) {
         </Grid>
 
         <Grid item>
-
+          <DoughnutChart />
         </Grid>
-
-
       </ThemeProvider>
 
     </Grid>
