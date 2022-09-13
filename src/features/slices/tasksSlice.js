@@ -32,7 +32,6 @@ export const getSortedCurrentEventTasks = createAsyncThunk(
 
 export const postNewTask = createAsyncThunk(
   "tasks/postNewTask", async (_payload) => {
-    console.log(_payload);
     let resp = await doApiMethod(URL + `/tasks/${_payload._id}`, "POST", _payload._dataBody)
     return resp.data;
   }
@@ -47,15 +46,12 @@ export const patchStatus = createAsyncThunk(
 
 export const deleteTask = createAsyncThunk(
   "tasks/deleteTask", async (task_id) => {
-    console.log("1");
     let resp = await doApiMethod(URL + `/tasks/delete/${task_id}`, "DELETE")
     return resp.data;
   }
 );
 export const editTask = createAsyncThunk(
   "tasks/editTask", async (_payload) => {
-    console.log("yes111");
-
     let resp = await doApiMethod(URL + `/tasks/${_payload._id}`, "PUT", _payload._body)
     return resp.data;
   }
@@ -69,11 +65,15 @@ export const tasksSlice = createSlice({
   initialState: {
     userTasks: [],
     currentEventTasks: [],
-    cuurentTask: {},
+    currentEventSortedTasks: [],
+    currentTask: {},
+    currentTaskWeight: 1,
     status: null,
   },
   reducers: {
-
+    setTaskWeight: (state, action) => {
+      state.currentTaskWeight = action.payload;
+    }
   },
 
   extraReducers(builder) {
@@ -82,9 +82,11 @@ export const tasksSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getUserTasks.fulfilled, (state, action) => {
-        state.status = "success";
 
-        if (action.payload) state.userTasks = action.payload;
+        if (action.payload) {
+          state.status = "success";
+          state.userTasks = action.payload;
+        }
       })
       .addCase(getUserTasks.rejected, (state, action) => {
         state.status = "failed";
@@ -95,8 +97,10 @@ export const tasksSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getCurrentEventTasks.fulfilled, (state, action) => {
-        state.status = "success";
-        if (action.payload) state.currentEventTasks = action.payload;
+        if (action.payload) {
+          state.status = "success";
+          state.currentEventTasks = action.payload;
+        }
       })
       .addCase(getCurrentEventTasks.rejected, (state, action) => {
         state.status = "failed";
@@ -106,8 +110,11 @@ export const tasksSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getCurrentTask.fulfilled, (state, action) => {
-        state.status = "success";
-        if (action.payload) state.cuurentTask = action.payload;
+        if (action.payload) {
+          state.status = "success";
+          state.currentTask = action.payload
+          state.currentTaskWeight = action.payload.weight;
+        };
       })
       .addCase(getCurrentTask.rejected, (state, action) => {
         state.status = "failed";
@@ -117,25 +124,24 @@ export const tasksSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getSortedCurrentEventTasks.fulfilled, (state, action) => {
-        state.status = "success";
-        if (action.payload) state.currentEventTasks = action.payload;
+        if (action.payload) {
+          state.status = "success";
+          state.currentEventSortedTasks = action.payload;
+        }
       })
       .addCase(getSortedCurrentEventTasks.rejected, (state, action) => {
         state.status = "failed";
       })
 
-
       .addCase(postNewTask.pending, (state, action) => {
         state.status = "loading";
       })
       .addCase(postNewTask.fulfilled, (state, action) => {
-        console.log(action.payload);
 
         state.status = "success";
         if (action.payload) {
           state.currentTask = action.payload;
           state.currentEventTasks.unshift(action.payload)
-
         }
 
       })
@@ -148,9 +154,24 @@ export const tasksSlice = createSlice({
         state.status = "loading";
       })
       .addCase(patchStatus.fulfilled, (state, action) => {
-        state.status = "success";
-        //להוסיף לוגיקה
-        // if (action.payload) state.currentTask = action.payload;
+        if (action.payload) {
+          state.status = "success";
+          let k = -1, l = -1;
+          for (let i = 0; i < state.currentEventTasks.length; i++) {
+            if (state.currentEventTasks[i]._id === action.payload._id) {
+              k = i;
+              break;
+            }
+          }
+          for (let j = 0; j < state.currentEventSortedTasks.length; j++) {
+            if (state.currentEventSortedTasks[j]._id === action.payload._id) {
+              l = j;
+              break;
+            }
+          }
+          state.currentEventSortedTasks.splice(l, 1, action.payload)
+          state.currentEventTasks.splice(k, 1, action.payload)
+        }
       })
       .addCase(patchStatus.rejected, (state, action) => {
         state.status = "failed";
@@ -161,15 +182,13 @@ export const tasksSlice = createSlice({
         state.status = "loading";
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
-        console.log(action.payload);
-        if (action.payload._id) {
+        if (action.payload) {
           state.status = "success";
-          state.userTasks = state.userTasks.filter((item) => item._id !== action.payload._id)
-          state.currentEventTasks = state.currentEventTasks.filter((item) => item._id !== action.payload._id)
+          state.userTasks = state.userTasks.filter((item) => item._id !== action.payload.task._id)
+          state.currentEventTasks = state.currentEventTasks.filter((item) => item._id !== action.payload.task._id)
         }
       })
       .addCase(deleteTask.rejected, (state, action) => {
-        console.log(action);
         state.status = "failed";
       })
 
@@ -179,7 +198,6 @@ export const tasksSlice = createSlice({
       })
       .addCase(editTask.fulfilled, (state, action) => {
         state.status = "success";
-        console.log(action.payload);
         if (action.payload._id) {
           state.userTasks = state.userTasks.filter((item) => item._id !== action.payload._id)
           state.userTasks.unshift(action.payload)
@@ -197,7 +215,8 @@ export const tasksSlice = createSlice({
 });
 
 
-// Action creators are generated for each case reducer function
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions
+export const {
+  setTaskWeight
+} = tasksSlice.actions;
 
 export default tasksSlice.reducer

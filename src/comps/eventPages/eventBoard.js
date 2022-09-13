@@ -17,7 +17,6 @@ export default function EventBoard() {
   const dispatch = useDispatch();
   const currentEvent = useSelector((state) => state.eventsReducer.currentEvent);
   const currentUser = useSelector((state) => state.userReducer.currentUser);
-  const currentEventTasks = useSelector((state) => state.tasksReducer.currentEventTasks);
   const usersOfCurrentEvent = useSelector((state) => state.eventsReducer.usersOfCurrentEvent);
   const params = useParams();
   const [editEventpermission, setEditEventpermission] = useState(false)
@@ -56,7 +55,6 @@ export default function EventBoard() {
           editEventpermission={editEventpermission}
           currentEvent={currentEvent}
           currentUser={currentUser}
-          currentEventTasks={currentEventTasks}
         />
       </Grid>
 

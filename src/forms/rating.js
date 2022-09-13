@@ -1,16 +1,16 @@
 import * as React from 'react';
+import { useSelector, useDispatch } from "react-redux";
+
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
-import { set } from 'react-hook-form';
+
+import { setTaskWeight } from '../features/slices/tasksSlice';
 
 const labels = {
-
   1: 'Regular',
   2: 'Medium',
-  3: 'High',
-
-
+  3: 'High'
 };
 
 function getLabelText(value) {
@@ -18,8 +18,9 @@ function getLabelText(value) {
 }
 
 export default function HoverRating({ handleChange }) {
-  const [value, setValue] = React.useState(1);
   const [hover, setHover] = React.useState(-1);
+  const currentTaskWeight = useSelector((state) => state.tasksReducer.currentTaskWeight);
+  const dispatch = useDispatch();
 
   return (
     <Box
@@ -32,11 +33,11 @@ export default function HoverRating({ handleChange }) {
       <Rating
         max={3}
         name="weight"
-        value={value}
+        value={currentTaskWeight}
         precision={1}
         getLabelText={getLabelText}
         onChange={(e, newValue) => {
-          setValue(newValue);
+          dispatch(setTaskWeight(newValue))
           handleChange(e);
         }}
         onChangeActive={(event, newHover) => {
@@ -44,8 +45,8 @@ export default function HoverRating({ handleChange }) {
         }}
         emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
       />
-      {value !== null && (
-        <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
+      {currentTaskWeight !== null && (
+        <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : currentTaskWeight]}</Box>
       )}
     </Box>
   );

@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux";
+import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
-
 import { Button, Stack, Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
+
+import { postNewTask, editTask } from '../features/slices/tasksSlice';
 import HoverRating from './rating';
 import './forms.css'
-import { postNewTask, editTask } from '../features/slices/tasksSlice';
 
 export default function TaskForm(props) {
 
   const dispatch = useDispatch();
   const params = useParams();
   const currentEvent = useSelector((state) => state.eventsReducer.currentEvent);
+  const currentTaskWeight = useSelector((state) => state.tasksReducer.currentTaskWeight);
   const [owner, setOwner] = useState();
   let { register, handleSubmit, reset, formState: { errors } } = useForm();
 
@@ -34,12 +35,13 @@ export default function TaskForm(props) {
   }, [props])
 
   const onSub = (_dataBody) => {
-    console.log(_dataBody);
     const _id = params.idEvent;
-    if (owner != "")
+    _dataBody.weight = currentTaskWeight;
+    if (owner !== "")
       _dataBody.usersId_arr = owner;
+
     if (props.isCreationMode) {
-      _dataBody.weight = 1;
+      _dataBody.weight = currentTaskWeight;
       _dataBody.status = 'Ready';
       dispatch(postNewTask({ _dataBody, _id }))
     }
@@ -92,7 +94,7 @@ export default function TaskForm(props) {
           ))}
 
         </select>
-
+        <HoverRating />
         <Stack
           spacing={2}
           direction="row"
