@@ -29,7 +29,7 @@ export default function TasksOfUser(props) {
           />
         ))
         }
-        {(!todo || todo.length == 0) && <h3
+        {(!todo || todo.length === 0) && <h3
           style={{
             paddingTop: '12px',
             color: '#d3d3d3',

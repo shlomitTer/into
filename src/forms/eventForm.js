@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useDispatch } from "react-redux";
 import { useForm } from 'react-hook-form';
 import { Button, Stack, Typography, Box } from '@mui/material';
-import { useParams } from 'react-router-dom';
 
 import './forms.css'
 import { editEvent, postNewEvent } from '../features/slices/eventsSlice';
@@ -10,7 +9,6 @@ import { editEvent, postNewEvent } from '../features/slices/eventsSlice';
 export default function EventForm(props) {
 
   const dispatch = useDispatch();
-  const params = useParams();
   let { register, handleSubmit, reset, formState: { errors } } = useForm();
 
 

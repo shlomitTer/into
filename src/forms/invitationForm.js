@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Backdrop from '@mui/material/Backdrop';
 import { Box, Stack, Button, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';
 
 import { getCurrentEventInvitees, postNewinvitee } from '../features/slices/inviteesSlice';
 import './forms.css'

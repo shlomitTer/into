@@ -1,19 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, Dialog, Stack, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { signUp } from '../features/slices/userSlice';
+
 import { toast } from 'react-toastify';
 
+import { signUp } from '../features/slices/userSlice';
+
 export default function SignUpForm(props) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  let { register, handleSubmit, reset, formState: { errors } } = useForm();
+  let { register, handleSubmit, formState: { errors } } = useForm();
   const currentUser = useSelector((state) => state.userReducer.currentUser);
 
   const dispatch = useDispatch()

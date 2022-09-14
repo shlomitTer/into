@@ -6,17 +6,17 @@ export const countDays = (_date) => {
     str = days + " days left"
     color = "green"
   }
-  if (days == 1) {
+  if (days === 1) {
     str = "tomorrow"
     color = "green"
 
   }
-  if (days == 0) {
+  if (days === 0) {
     str = "today"
     color = "orange"
 
   }
-  if (days == -1) {
+  if (days === -1) {
     str = "yesterday"
     color = "red"
 

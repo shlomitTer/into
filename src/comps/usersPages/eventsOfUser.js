@@ -14,10 +14,10 @@ export default function EventsOfUser(props) {
     <React.Fragment>
 
       {/* invitaions of currentUser */}
-      {(props.currentUserInvitations.length != 0) && <Typography variant='h5' xs={2}>New Events</Typography>
+      {(props.currentUserInvitations.length !== 0) && <Typography variant='h5' xs={2}>New Events</Typography>
       }
       <Grid container >
-        {(props.currentUserInvitations.length != 0) && props.currentUserInvitations.map(item => (
+        {(props.currentUserInvitations.length !== 0) && props.currentUserInvitations.map(item => (
           <InvitationItem
             invitation={item}
             currentUser={props.currentUser}
@@ -61,7 +61,7 @@ export default function EventsOfUser(props) {
             key={event._id} />
         ))
         }
-        {(!props.eventsByParticpant || props.eventsByParticpant.length == 0) && <h4
+        {(!props.eventsByParticpant || props.eventsByParticpant.length === 0) && <h4
           style={{
             paddingTop: '12px',
             color: '#d3d3d3',
