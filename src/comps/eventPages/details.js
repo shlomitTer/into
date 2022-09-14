@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from 'react-router-dom';
 
-import { Container, Grid, IconButton, Typography } from '@mui/material'
-import { createTheme, responsiveFontSizes, ThemeProvider, } from '@mui/material/styles';
+import { Box, Grid, IconButton, Typography } from '@mui/material'
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
@@ -32,7 +32,7 @@ export default function Details({ editEventpermission }) {
   }, [])
 
   useEffect(() => {
-    currentEvent?.description && setDes(shorten_a_string(currentEvent?.description, 20));
+    currentEvent?.description && setDes(shorten_a_string(currentEvent?.description, 99));
     let _date = new Date(currentEvent?.date).toLocaleDateString()
     setDate(_date)
     setDays(countDays(currentEvent?.date))
@@ -40,59 +40,62 @@ export default function Details({ editEventpermission }) {
 
 
   return (
-    <Container
-      sx={{
-        boxShadow: 1,
-        bgcolor: 'white',
-        borderRadius: 2,
-        // height: '42vh',
-        p: 1,
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignContent: 'start',
-      }}>
-
-      {editEventpermission && <Grid item xs={12} sx={{
-        display: 'flex',
-        justifyContent: 'end'
-      }}>
-        <IconButton onClick={() => {
-          setIsEditModeEvent(true)
+    <Grid item xs={12}>
+      <Box
+        sx={{
+          boxShadow: 1,
+          bgcolor: 'white',
+          borderRadius: 2,
+          height: '42vh',
+          p: 1,
+          display: 'flex',
+          flexWrap: 'wrap',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
         }}>
-          <ModeEditOutlinedIcon fontSize="small" />
-        </IconButton>
+        <Box>
+          {editEventpermission && <Box sx={{
+            display: 'flex',
+            justifyContent: 'end'
+          }}>
+            <IconButton onClick={() => {
+              setIsEditModeEvent(true)
+            }}>
+              <ModeEditOutlinedIcon fontSize="small" />
+            </IconButton>
 
-        <IconButton onClick={() => {
-          setIsDeleteEvent(true)
-        }}>
-          <DeleteOutlinedIcon fontSize="small" />
-        </IconButton>
-      </Grid>}
+            <IconButton onClick={() => {
+              setIsDeleteEvent(true)
+            }}>
+              <DeleteOutlinedIcon fontSize="small" />
+            </IconButton>
+          </Box>}
 
-      <Grid item xs={12} sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignContent: 'space-beween',
-        height: '42vh'
-      }}>
-        <Grid item xs={12} sx={{ pb: 8 }}>
-          <Typography variant='h5' sx={{ fontWeight: 700, pt: 0 }}>{currentEvent?.title}</Typography>
-          <Typography variant='body2' sx={{ fontWeight: 700, py: 1, color: "gray" }}>created by: {currentEvent?.user_id?.name}</Typography>
-          <Typography variant="h6">{des}</Typography>
-        </Grid>
+          <Box sx={{ pt: 1 }}>
+            <Box>
+              <Typography variant='h5' sx={{ fontWeight: 700, pt: 0 }}>{currentEvent?.title}</Typography>
+            </Box>
+            <Box>
+              <Typography variant='body2' sx={{ fontWeight: 700, py: 1, color: "gray" }}>created by: {currentEvent?.user_id?.name}</Typography>
+            </Box>
+            <Box >
+              <Typography variant="h6" sx={{ wordBreak: 'break-word' }}>{currentEvent?.description}</Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
 
-        <Grid item xs={12} sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-
-          <Grid item xs={6}>
+          <Box>
             <Typography variant="h6" sx={{ paddingRight: 5, fontWeight: 700 }}>{date}</Typography>
-          </Grid>
+          </Box>
 
-          <Grid item xs={5} sx={{ textAlign: 'center' }} >
+          <Box sx={{ textAlign: 'center' }} >
             {/* <AccessTimeIcon fontSize="medium" /> */}
             <Typography variant="body2" sx={{ pt: 1 }} color={days.color}>{days.str} </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
+          </Box>
+
+        </Box>
+      </Box>
       <EventModal
         isEditModeEvent={isEditModeEvent}
         setIsEditModeEvent={setIsEditModeEvent}
@@ -105,7 +108,10 @@ export default function Details({ editEventpermission }) {
         setIsDeleteEvent={setIsDeleteEvent}
         event={currentEvent}
       />
-
-    </Container>
+    </Grid>
   )
 }
+
+
+
+
