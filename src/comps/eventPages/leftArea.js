@@ -12,6 +12,7 @@ export default function LeftArea(props) {
       }}>
       <Details
         editEventpermission={props.editEventpermission}
+        isEventCreator={props.isEventCreator}
       />
       <DashBoard />
     </Grid>

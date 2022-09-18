@@ -1,32 +1,28 @@
-import React, { useEffect } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { deleteEvent } from '../features/slices/eventsSlice';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+
+import { deleteEvent, leaveEvent } from '../features/slices/eventsSlice';
 import { deleteTask } from '../features/slices/tasksSlice';
 import { refusal } from '../features/slices/inviteesSlice';
 
 export default function Alert(props) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const dispatch = useDispatch()
   const nav = useNavigate()
-  console.log(props)
+  const params = useParams();
 
   useEffect(() => {
-    if (props.isDeleteEvent || props.isDeleteTask || props.isRefusal) {
+    if (props.isDeleteEvent || props.isDeleteTask || props.isRefusal || props.isLeavingEvent) {
       setOpen(true)
     }
   }, [props])
-
 
   const handleClick = () => {
     if (props.isDeleteEvent) {
@@ -40,12 +36,15 @@ export default function Alert(props) {
       setOpen(false)
     }
     if (props.isRefusal) {
-      console.log(props.invitation.email);
-      console.log(props.invitation.event_id._id);
       let body = { email: props.invitation.email, event_id: props.invitation.event_id._id }
-      console.log(body);
       dispatch(refusal(body))
       props.setIsRefusal(false)
+      setOpen(false)
+    }
+    if (props.isLeavingEvent) {
+      dispatch(leaveEvent(params.idEvent))
+      props.setIsLeavingEvent(false)
+      props.setIsConfirmed(true)
       setOpen(false)
     }
   };
@@ -57,6 +56,8 @@ export default function Alert(props) {
       props.setIsDeleteTask(false)
     if (props.isRefusal)
       props.setIsRefusal(false)
+    if (props.isLeavingEvent)
+      props.setIsLeavingEvent(false)
     setOpen(false);
 
   };

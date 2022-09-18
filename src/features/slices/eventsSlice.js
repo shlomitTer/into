@@ -35,6 +35,11 @@ export const editEvent = createAsyncThunk(
     let resp = await doApiMethod(URL + `/events/editEvent/${_payload._id}`, "PUT", _payload._dataBody);
     return resp.data;
   });
+export const leaveEvent = createAsyncThunk(
+  "events/leaveEvent", async (_payload) => {
+    let resp = await doApiMethod(URL + `/events/leaveEvent/${_payload}`, "PATCH");
+    return resp.data;
+  });
 export const deleteEvent = createAsyncThunk(
   "events/deleteEvent", async (_payload) => {
     let resp = await doApiMethod(URL + `/events/del/${_payload}`, "DELETE");
@@ -42,15 +47,7 @@ export const deleteEvent = createAsyncThunk(
   }
 );
 
-// export const editTitle = createAsyncThunk(
-//   "events/editTitle", async (_payload) => {
-//     // console.log(state)
-//     console.log(_payload._id);
-//     let resp = await doApiMethod(API_URL + `/events/patchTitle/${_payload._id}`, "PATCH", _payload._dataBody);
-//     console.log(resp.data);
-//     return resp.data;
-//   }
-// );
+
 
 
 export const eventsSlice = createSlice({
@@ -62,6 +59,7 @@ export const eventsSlice = createSlice({
     currentEvent: undefined,
     usersOfCurrentEvent: undefined,
     status: null,
+    errorCode: ""
   },
   reducers: {
   },
@@ -70,6 +68,7 @@ export const eventsSlice = createSlice({
     builder
       .addCase(getEventsByCreator.pending, (state, action) => {
         state.status = "loading";
+        state.errorCode = ""
       })
       .addCase(getEventsByCreator.fulfilled, (state, action) => {
         state.status = "success";
@@ -77,23 +76,28 @@ export const eventsSlice = createSlice({
         if (action.payload) state.eventsByCreator = action.payload;
       })
       .addCase(getEventsByCreator.rejected, (state, action) => {
+        state.errorCode = action.error.code;
         state.status = "failed";
       })
 
       .addCase(getEventsByParticpant.pending, (state, action) => {
         state.status = "loading";
+        state.errorCode = ""
       })
       .addCase(getEventsByParticpant.fulfilled, (state, action) => {
         state.status = "success";
         if (action.payload) state.eventsByParticpant = action.payload;
       })
       .addCase(getEventsByParticpant.rejected, (state, action) => {
+        state.errorCode = action.error.code;
         state.status = "failed";
+
       })
 
 
       .addCase(getCurrentEvent.pending, (state, action) => {
         state.status = "loading";
+        state.errorCode = ""
       })
       .addCase(getCurrentEvent.fulfilled, (state, action) => {
         state.status = "success";
@@ -103,12 +107,14 @@ export const eventsSlice = createSlice({
         }
       })
       .addCase(getCurrentEvent.rejected, (state, action) => {
+        state.errorCode = action.error.code;
         state.status = "failed";
       })
 
 
       .addCase(postNewEvent.pending, (state, action) => {
         state.status = "loading";
+        state.errorCode = ""
       })
       .addCase(postNewEvent.fulfilled, (state, action) => {
         if (action.payload) state.eventsByParticpant.unshift(action.payload);
@@ -116,12 +122,14 @@ export const eventsSlice = createSlice({
         state.status = "success";
       })
       .addCase(postNewEvent.rejected, (state, action) => {
+        state.errorCode = action.error.code;
         state.status = "failed";
       })
 
 
       .addCase(editEvent.pending, (state, action) => {
         state.status = "loading";
+        state.errorCode = ""
       })
       .addCase(editEvent.fulfilled, (state, action) => {
         if (action.payload) {
@@ -132,36 +140,42 @@ export const eventsSlice = createSlice({
         state.status = "success";
       })
       .addCase(editEvent.rejected, (state, action) => {
+        state.errorCode = action.error.code;
+        state.status = "failed";
+      })
+      .addCase(leaveEvent.pending, (state, action) => {
+        state.status = "loading";
+        state.errorCode = ""
+      })
+      .addCase(leaveEvent.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.eventsByParticpant = state.eventsByParticpant.filter((item) => item._id !== action.payload.event_id)
+          state.status = "success";
+        }
+      })
+      .addCase(leaveEvent.rejected, (state, action) => {
+        state.errorCode = action.error.code;
         state.status = "failed";
       })
 
 
       .addCase(deleteEvent.pending, (state, action) => {
         state.status = "loading";
+        state.errorCode = ""
       })
       .addCase(deleteEvent.fulfilled, (state, action) => {
         if (action.payload) {
-          //return id
           state.eventsByParticpant = state.eventsByParticpant.filter((item) => item._id !== action.payload);
-          // state.currentEvent = {}
-          // state.usersOfCurrentEvent = {};
+          state.currentEvent = undefined;
+          state.usersOfCurrentEvent = undefined;
         }
         state.status = "success";
       })
       .addCase(deleteEvent.rejected, (state, action) => {
+        state.errorCode = action.error.code;
         state.status = "failed";
       })
 
-    // .addCase(editTitle.pending, (state, action) => {
-    //   state.status = "loading";
-    // })
-    // .addCase(editTitle.fulfilled, (state, action) => {
-    //   // להשלים לוגיקה
-    //   state.status = "success";
-    // })
-    // .addCase(editTitle.rejected, (state, action) => {
-    //   state.status = "failed";
-    // })
 
   }
 
