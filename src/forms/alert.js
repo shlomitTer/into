@@ -6,7 +6,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-import { deleteEvent, leaveEvent } from '../features/slices/eventsSlice';
+import { deleteEvent, leaveEvent, removeAparticipant } from '../features/slices/eventsSlice';
 import { deleteTask } from '../features/slices/tasksSlice';
 import { refusal } from '../features/slices/inviteesSlice';
 
@@ -19,7 +19,7 @@ export default function Alert(props) {
   const params = useParams();
 
   useEffect(() => {
-    if (props.isDeleteEvent || props.isDeleteTask || props.isRefusal || props.isLeavingEvent) {
+    if (props.isDeleteEvent || props.isDeleteTask || props.isRefusal || props.isLeavingEvent || props.isRemove) {
       setOpen(true)
     }
   }, [props])
@@ -47,6 +47,11 @@ export default function Alert(props) {
       props.setIsConfirmed(true)
       setOpen(false)
     }
+    if (props.isRemove) {
+      dispatch(removeAparticipant({ event_id: params.idEvent, _id: props.participant._id }))
+      props.setIsRemove(false)
+      setOpen(false)
+    }
   };
 
   const handleClose = () => {
@@ -58,6 +63,8 @@ export default function Alert(props) {
       props.setIsRefusal(false)
     if (props.isLeavingEvent)
       props.setIsLeavingEvent(false)
+    if (props.isRemove)
+      props.setIsRemove(false)
     setOpen(false);
 
   };

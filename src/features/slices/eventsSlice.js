@@ -46,6 +46,12 @@ export const deleteEvent = createAsyncThunk(
     return resp.data;
   }
 );
+export const removeAparticipant = createAsyncThunk(
+  "events/removeAparticipant", async (_payload) => {
+    let resp = await doApiMethod(URL + `/events/remove/${_payload.event_id}`, "PATCH", { _id: _payload._id });
+    return resp.data;
+  }
+);
 
 
 
@@ -168,10 +174,27 @@ export const eventsSlice = createSlice({
           state.eventsByParticpant = state.eventsByParticpant.filter((item) => item._id !== action.payload);
           state.currentEvent = undefined;
           state.usersOfCurrentEvent = undefined;
+          state.status = "success";
         }
-        state.status = "success";
       })
       .addCase(deleteEvent.rejected, (state, action) => {
+        state.errorCode = action.error.code;
+        state.status = "failed";
+      })
+
+
+      .addCase(removeAparticipant.pending, (state, action) => {
+        state.status = "loading";
+        state.errorCode = ""
+      })
+      .addCase(removeAparticipant.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.currentEvent = action.payload.event;
+          state.usersOfCurrentEvent = state.currentEvent.usersId_arr;
+          state.status = "success";
+        }
+      })
+      .addCase(removeAparticipant.rejected, (state, action) => {
         state.errorCode = action.error.code;
         state.status = "failed";
       })

@@ -9,7 +9,7 @@ import ParticipantsBoard from './participantsBoard'
 import { getCurrentEvent } from '../../features/slices/eventsSlice';
 import { getCurrentEventTasks } from '../../features/slices/tasksSlice';
 import LeftArea from './leftArea';
-import { isEditEventAllowed, isRelated } from '../../features/functions/permissions';
+import { isEditEventAllowed } from '../../features/functions/permissions';
 import { getCurrentUser } from '../../features/slices/userSlice';
 
 export default function EventBoard() {
@@ -78,6 +78,7 @@ export default function EventBoard() {
         <ParticipantsBoard
           editEventpermission={editEventpermission}
           usersOfCurrentEvent={usersOfCurrentEvent}
+          isEventCreator={isEventCreator}
         />
       </Grid>
 
