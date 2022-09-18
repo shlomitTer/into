@@ -10,6 +10,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { countDays } from '../../features/functions/countDays';
 import EventModal from '../../forms/eventModal';
 import Alert from '../../forms/alert'
+import { toast } from 'react-toastify';
 
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
@@ -24,6 +25,7 @@ export default function Details(props) {
   const [alertTitle, setAlertTitle] = useState("");
   const currentEvent = useSelector((state) => state.eventsReducer.currentEvent);
   const errorCode = useSelector((state) => state.eventsReducer.errorCode);
+  const status = useSelector((state) => state.eventsReducer.status);
   const nav = useNavigate()
 
   useEffect(() => {
@@ -33,9 +35,17 @@ export default function Details(props) {
   }, [currentEvent])
 
   useEffect(() => {
-    if (isConfirmed)
-      if (!errorCode.length)
+    if (isConfirmed) {
+      if (errorCode === 'ERR_NETWORK') {
+        toast.error('An error occurred')
+      }
+      else if (!errorCode.length) {
+        setIsConfirmed(false)
+        toast.success("you left successfully")
         nav(`/profile`)
+      }
+
+    }
   }, [isConfirmed])
 
   return (
