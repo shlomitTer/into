@@ -17,8 +17,8 @@ export const getCurrentEventTasks = createAsyncThunk(
   }
 );
 export const getCurrentTask = createAsyncThunk(
-  "tasks/idTask", async (task_id) => {
-    let resp = await doApiGet(URL + `/tasks/${task_id}`);
+  "tasks/getCurrentTask", async (task_id) => {
+    let resp = await doApiGet(URL + `/tasks/task/${task_id}`);
     return resp.data;
   }
 );
@@ -69,10 +69,21 @@ export const tasksSlice = createSlice({
     currentTask: {},
     currentTaskWeight: 1,
     status: null,
+    isTaskPageOpen: false,
+    task_id: "",
   },
   reducers: {
     setTaskWeight: (state, action) => {
       state.currentTaskWeight = action.payload;
+    },
+    setIsTaskPageOpen: (state, action) => {
+      state.isTaskPageOpen = action.payload;
+    },
+    setTask_id: (state, action) => {
+      state.task_id = action.payload;
+    },
+    setCurrentTask: (state, action) => {
+      state.currentTask = []
     }
   },
 
@@ -91,7 +102,6 @@ export const tasksSlice = createSlice({
       .addCase(getUserTasks.rejected, (state, action) => {
         state.status = "failed";
       })
-
 
       .addCase(getCurrentEventTasks.pending, (state, action) => {
         state.status = "loading";
@@ -199,6 +209,7 @@ export const tasksSlice = createSlice({
       .addCase(editTask.fulfilled, (state, action) => {
         state.status = "success";
         if (action.payload._id) {
+          state.currentTask = action.payload;
           state.userTasks = state.userTasks.filter((item) => item._id !== action.payload._id)
           state.userTasks.unshift(action.payload)
           state.currentEventTasks = state.currentEventTasks.filter((item) => item._id !== action.payload._id)
@@ -216,7 +227,10 @@ export const tasksSlice = createSlice({
 
 
 export const {
-  setTaskWeight
+  setTaskWeight,
+  setIsTaskPageOpen,
+  setTask_id,
+  setCurrentTask
 } = tasksSlice.actions;
 
 export default tasksSlice.reducer

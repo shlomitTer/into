@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Grid, Typography, Divider, AvatarGroup, Avatar, IconButton, Button, Stack
 } from '@mui/material'
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 import { stringAvatar } from '../../features/functions/avatarStringColor'
-import { patchStatus } from '../../features/slices/tasksSlice';
+import { patchStatus, setIsTaskPageOpen, setTask_id } from '../../features/slices/tasksSlice';
 import { countDays } from '../../features/functions/countDays';
 import TaskModal from '../../forms/TaskModal';
 import Alert from '../../forms/alert'
 import { isTaskEditAllowed } from '../../features/functions/permissions';
 import './taskItem.css'
+
 // import { shorten_a_string } from '../../features/functions/string'
 
 export default function TaskItem(props) {
@@ -21,12 +23,14 @@ export default function TaskItem(props) {
   const [date, setDate] = useState();
   const [isEditMode, setIsEditMode] = useState(false);
   const [isDeleteTask, setIsDeleteTask] = useState(false);
+  const [openTask, setOpenTask] = useState(false);
   const [icon, setIcon] = useState({
     Ready: false,
     InProgress: false,
     Done: false
   });
   const [editTaskPermission, setEditTaskPermission] = useState(false)
+  const { isTaskPageOpen } = useSelector((state) => state.tasksReducer)
 
   //Editing permission check 
   useEffect(() => {
@@ -55,7 +59,8 @@ export default function TaskItem(props) {
     setDate(_date)
   }, [])
 
-  const handleClick = (_id, _value) => {
+  const handleClick = (e, _id, _value) => {
+    e.stopPropagation()
     let statusIcon = {
       Ready: false,
       InProgress: false,
@@ -67,6 +72,14 @@ export default function TaskItem(props) {
     let _dataBody = { status: _value }
     dispatch(patchStatus({ _dataBody, _id }));
   }
+
+  const handleOpen = (e) => {
+    e.stopPropagation()
+    dispatch(setIsTaskPageOpen(!isTaskPageOpen));
+    dispatch(setTask_id(props.task._id));
+  }
+
+
   return (
     <Grid item xs={12}
       sx={{
@@ -91,9 +104,9 @@ export default function TaskItem(props) {
         }}>
 
         <Stack spacing={2} sx={{}}>
-          <Button onClick={() => { handleClick(props.task._id, "Ready") }} className={`${icon.Ready ? '_red' : 'btn'}`} disabled={!editTaskPermission}>Ready</Button>
-          <Button onClick={() => { handleClick(props.task._id, "InProgress") }} className={`${icon.InProgress ? '_yellow' : 'btn'}`} disabled={!editTaskPermission}>In Progress</Button>
-          <Button onClick={() => { handleClick(props.task._id, "Done") }} className={`${icon.Done ? '_green' : 'btn'}`} disabled={!editTaskPermission}>Done</Button>
+          <Button onClick={(e) => { handleClick(e, props.task._id, "Ready") }} className={`${icon.Ready ? '_red' : 'btn'}`} disabled={!editTaskPermission}>Ready</Button>
+          <Button onClick={(e) => { handleClick(e, props.task._id, "InProgress") }} className={`${icon.InProgress ? '_yellow' : 'btn'}`} disabled={!editTaskPermission}>In Progress</Button>
+          <Button onClick={(e) => { handleClick(e, props.task._id, "Done") }} className={`${icon.Done ? '_green' : 'btn'}`} disabled={!editTaskPermission}>Done</Button>
         </Stack>
       </Grid>
       <Divider orientation="vertical" variant="middle" flexItem />
@@ -102,18 +115,24 @@ export default function TaskItem(props) {
         {editTaskPermission && <Grid item sx={{
           display: 'flex',
           justifyContent: 'end',
-        }}>
-          <IconButton onClick={() => {
+        }}><IconButton onClick={handleOpen}>
+            <KeyboardArrowLeftIcon fontSize="small" />
+          </IconButton>
+
+          <IconButton onClick={(e) => {
+            e.stopPropagation(e)
             setIsEditMode(true);
           }}>
             <ModeEditOutlinedIcon fontSize="small" />
           </IconButton>
 
-          <IconButton onClick={() => {
+          <IconButton onClick={(e) => {
+            e.stopPropagation()
             setIsDeleteTask(true)
           }}>
             <DeleteOutlinedIcon fontSize="small" />
           </IconButton>
+
         </Grid>}
         <Typography variant='h6'>{props.task.title}</Typography>
         <Typography variant='body1' sx={{ height: '47px' }}>{props.task.description}</Typography>
