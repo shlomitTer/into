@@ -12,17 +12,18 @@ export default function ParticipantsBoard(props) {
   const params = useParams()
 
   return (
-    <Grid container sx={{
+    <Grid item sx={{
       position: "sticky",
-      top: 2
-    }}>
+      top: 2,
+      margin: "0 auto",
+    }}
+      xs={11}>
       <Box sx={{
         bgcolor: '#ffff',
         boxShadow: 1,
         borderRadius: 2,
         padding: 2,
         minHeight: '90vh',
-        position: 'sticky',
       }}>
         <Box>
           <Typography variant='h5'>Participants

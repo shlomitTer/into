@@ -74,7 +74,7 @@ export default function EventBoard() {
           />
         </Grid>
 
-        <Grid item md={3} xs={11} elevation={3}>
+        <Grid item md={3} xs={12} >
           <ParticipantsBoard
             editEventpermission={editEventpermission}
             usersOfCurrentEvent={usersOfCurrentEvent}

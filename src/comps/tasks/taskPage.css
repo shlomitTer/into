@@ -22,7 +22,7 @@
   animation: closePopUp 1500ms;
 }
 .scrolled{
-  height:35vh;
+  height:28vh;
   overflow: auto;
   overflow-x: hidden;
   direction:ltr;

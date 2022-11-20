@@ -20,7 +20,7 @@ export default function DashBoard({ event }) {
       }}>
 
       <ThemeProvider theme={theme}>
-        <Grid item>
+        <Grid item xs={12}>
           <Typography variant='h5'>DashBoard  </Typography>
         </Grid>
 

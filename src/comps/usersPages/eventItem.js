@@ -4,9 +4,12 @@ import { Link } from 'react-router-dom'
 import { Grid, Typography, AvatarGroup, Avatar } from '@mui/material'
 import { stringAvatar } from '../../features/functions/avatarStringColor'
 import './eventItem.css'
+import { shorten_a_string } from '../../features/functions/string'
+
 export default function EventItem(props) {
   const [date, setDate] = useState();
   const [title, setTitle] = useState();
+  const [des, setDes] = useState();
   const [isEventCreator, setIsEventCreator] = useState(false)
 
   useEffect(() => {
@@ -18,6 +21,7 @@ export default function EventItem(props) {
     let _title = props.event.title
     _title = _title.toUpperCase();
     setTitle(_title)
+    setDes(shorten_a_string(props.event?.description, 40))
   }, [props])
 
   return (
@@ -52,8 +56,9 @@ export default function EventItem(props) {
         <Grid item>
           <Typography variant='body2'
             sx={{
+              wordBreak: 'break-all',
               height: 50
-            }}>{props.event?.description}</Typography>
+            }}>{des}</Typography>
         </Grid>
 
         <Grid item>

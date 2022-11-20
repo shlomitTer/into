@@ -20,7 +20,7 @@ export default function ParticipantItem(props) {
     setIsRemove(true)
   }
   return (
-    <Grid container spacing={1} xs={12}
+    <Grid container spacing={1}
       sx={{
         mt: 1,
         display: 'flex',
@@ -37,18 +37,19 @@ export default function ParticipantItem(props) {
         <Avatar key={props.user._id} {...stringAvatar(props.user?.name)} ></Avatar>
       </Grid>
 
-      <Grid item xs={8} >
-        <Typography sx={{ wordBreak: 'revert' }} variant='body2'>{props.user.name}</Typography>
-        <Typography sx={{ wordBreak: 'revert' }} variant='body2'>{props.user.email}</Typography>
+      <Grid item xs={9} >
+        <Typography sx={{ wordBreak: 'break-all' }} variant='body2'>{props.user.name}</Typography>
+        <Typography sx={{ wordBreak: 'break-all' }} variant='body2'>{props.user.email}</Typography>
       </Grid>
       {/* Only the event creator can remove a participant (not himself) */}
-      {(props.isEventCreator && (currentUser._id !== props.user._id) && (props.user._id !== currentEvent.user_id._id)) ? <Grid item xs={1} padding={3} >
+      {(props.isEventCreator && (currentUser._id !== props.user._id) && (props.user._id !== currentEvent.user_id._id)) && <Grid item xs={1} >
         <IconButton onClick={() => {
           handleRemove(props.user)
         }}>
           <ClearOutlinedIcon fontSize='small' />
         </IconButton>
-      </Grid> : <Grid item xs={1} padding={3}></Grid>}
+      </Grid>
+      }
       <Alert
         title={`Remove a participant: ${props.user.name}`}
         content={"Are you sure?"}

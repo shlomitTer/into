@@ -14,6 +14,7 @@ import TaskModal from '../../forms/TaskModal';
 import Alert from '../../forms/alert'
 import { isTaskEditAllowed } from '../../features/functions/permissions';
 import './taskItem.css'
+import { shorten_a_string } from '../../features/functions/string';
 
 // import { shorten_a_string } from '../../features/functions/string'
 
@@ -21,6 +22,7 @@ export default function TaskItem(props) {
   const dispatch = useDispatch()
   const [days, setDays] = useState('')
   const [date, setDate] = useState();
+  const [des, setDes] = useState();
   const [isEditMode, setIsEditMode] = useState(false);
   const [isDeleteTask, setIsDeleteTask] = useState(false);
   const [openTask, setOpenTask] = useState(false);
@@ -57,6 +59,7 @@ export default function TaskItem(props) {
   useEffect(() => {
     let _date = new Date(props.task.date).toLocaleDateString()
     setDate(_date)
+    setDes(shorten_a_string(props.task?.description, 45))
   }, [])
 
   const handleClick = (e, _id, _value) => {
@@ -135,7 +138,7 @@ export default function TaskItem(props) {
 
         </Grid>}
         <Typography variant='h6'>{props.task.title}</Typography>
-        <Typography variant='body1' sx={{ height: '47px' }}>{props.task.description}</Typography>
+        <Typography variant='body1' sx={{ height: '47px', wordBreak: 'break-all' }}>{des}</Typography>
         <Grid item sx={{
           display: 'flex',
           flexWrap: 'wrap',
