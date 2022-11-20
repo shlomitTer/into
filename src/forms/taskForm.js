@@ -65,12 +65,12 @@ export default function TaskForm(props) {
       <form onSubmit={handleSubmit(onSub)}>
 
         <label >Title</label>
-        <input {...register('title', { required: true, minLength: 2, maxLength: 99 })} type="text" />
-        {errors.title && <small className='_error'>Enter valid title (min 2 chars)</small>}
+        <input {...register('title', { required: true, minLength: 2, maxLength: 50 })} type="text" />
+        {errors.title && <small className='_error'>Enter valid title (min 2 chars max 50 chars)</small>}
 
         <label >Description</label>
-        <textarea {...register('description', { required: false, minLength: 2, maxLength: 150 })} type="text" ></textarea>
-        {errors.description && <small className='_error'>Enter valid description (min 2 chars)</small>}
+        <textarea {...register('description', { required: false, minLength: 2, maxLength: 99 })} type="text" ></textarea>
+        {errors.description && <small className='_error'>Enter valid description (min 2 chars max 99 chars)</small>}
 
         <label >Date</label>
         <input min={new Date().toISOString().slice(0, -8)} max={currentEvent.date} {...register('date', { required: true })} type="datetime-local" />

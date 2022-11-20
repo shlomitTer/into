@@ -49,10 +49,12 @@ export default function InvitationForm(props) {
   }, [])
 
   useEffect(() => {
-    let usersAndInvieesList = [...currentEventInvitees, ...currentEvent.usersId_arr]
-    let usersAndInvieesListEmail = usersAndInvieesList.map(item => item.email)
-    setEmails(usersAndInvieesListEmail)
-  }, [currentEventInvitees])
+    if (currentEvent) {
+      let usersAndInvieesList = [...currentEventInvitees, ...currentEvent.usersId_arr]
+      let usersAndInvieesListEmail = usersAndInvieesList.map(item => item.email)
+      setEmails(usersAndInvieesListEmail)
+    }
+  }, [currentEventInvitees, currentEvent])
 
   const onSub = (_dataBody, e) => {
     if (emails.includes(_dataBody.email)) {
@@ -62,7 +64,6 @@ export default function InvitationForm(props) {
     _dataBody.creator = props.event.user_id.name;
     _dataBody.user_id = props.event.user_id._id;
     _dataBody.event_id = props.event._id;
-    console.log(_dataBody);
     dispatch(postNewinvitee(_dataBody))
     setOpen(false)
     props.setIsInvites(false)
@@ -73,7 +74,6 @@ export default function InvitationForm(props) {
     setOpen(false)
     props.setIsInvites(false)
   };
-
   return (
     <div>
       <Modal
@@ -101,7 +101,7 @@ export default function InvitationForm(props) {
               {errors.email && <small className='_error'>Enter valid Email</small>}
 
               <label>phone:</label>
-              <input  {...register("phone", { required: true, pattern: /^\+(972)([5]{1}\d{8})$/ })} type="tel" defaultValue={'+972'} />
+              <input  {...register("phone", { required: true, pattern: /^\+(972)([5]{1}\d{8})$/ })} type="phone" defaultValue={'+972'} />
               {errors.phone && <small className='_error'>
                 Enter valid phone (min 9 chars)
               </small>}
