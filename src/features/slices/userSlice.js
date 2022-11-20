@@ -44,10 +44,8 @@ export const userSlice = createSlice({
       .addCase(getCurrentUser.pending, (state, action) => {
         state.status = "loading";
         state.errorCode = ""
-
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
-        console.log(action);
         state.status = "success";
 
         state.currentUser = action.payload;
@@ -97,9 +95,6 @@ export const userSlice = createSlice({
 
 });
 
-
-// Action creators are generated for each case reducer function
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions
 export const {
   logout
 } = userSlice.actions;

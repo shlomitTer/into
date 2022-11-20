@@ -15,7 +15,6 @@ export default function BtnDelEdit(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const _open = Boolean(anchorEl);
   const dispatch = useDispatch();
-  console.log((props));
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -91,7 +90,6 @@ export default function BtnDelEdit(props) {
           setIsCreationMode={props.setIsCreationMode}
           isEditMode={props.isEditMode}
           setIsEditMode={props.setIsEditMode}
-
         />
 
         <MenuItem onClick={() => {

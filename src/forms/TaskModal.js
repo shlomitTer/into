@@ -2,29 +2,20 @@ import React, { useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+
 import TaskForm from './taskForm';
 
-
 export default function TaskModal(props) {
-
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-  console.log(open)
-
-
-  // const handleOpen = () => setOpen(true);
 
   useEffect(() => {
     if (props.isCreationMode || props.isEditMode)
       setOpen(true)
   }, [props.isCreationMode, props.isEditMode])
 
-
-
   const handleClose = () => {
-
     if (props.isEditMode)
       props.setIsEditMode(false)
     else
@@ -32,7 +23,6 @@ export default function TaskModal(props) {
     setOpen(false);
 
   }
-
 
   return (
     <div>

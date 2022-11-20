@@ -22,10 +22,8 @@ export default function SignUpForm(props) {
   const nav = useNavigate()
 
   useEffect(() => {
-    console.log(props.isDeleteTask);
     if (props.isNew) {
       setOpen(true)
-
     }
   }, [props])
 
