@@ -20,7 +20,8 @@ export default function TaskPage(props) {
 
   useEffect(() => {
     dispatch(getCurrentTask(task_id))
-  }, [isTaskPageOpen])
+  }, [task_id])
+
 
   useEffect(() => {
     let _date = new Date(currentTask?.date).toLocaleDateString()
@@ -80,11 +81,10 @@ export default function TaskPage(props) {
   }
 
   const handleRemove = (id) => {
-
     let itemsArray = [...listItemsArray]
     if (itemsArray.length === 1)
       setIsLast(true)
-    itemsArray = [...itemsArray.filter((obj) => obj._id != id)]  // console.log(itemsArray);
+    itemsArray = [...itemsArray.filter((obj) => obj._id != id)]
     setListItemsArray(itemsArray)
   };
 
