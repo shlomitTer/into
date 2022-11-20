@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -11,9 +11,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 
-
 export default function Nav() {
-
+  const { currentUser } = useSelector((state) => state.userReducer);
   const [anchorEl, setAnchorEl] = useState(null);
   const nav = useNavigate();
   const handleMenu = (event) => {
@@ -28,10 +27,13 @@ export default function Nav() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
         <Toolbar>
-          <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h5" component="div" sx={{ flexGrow: 1, cursor: 'pointer' }} onClick={() => {
+            nav("/profile")
+          }}>
             Into It
           </Typography>
           <div>
+            <span>{currentUser?.name}</span>
             <IconButton
               size="large"
               aria-label="account of current user"
