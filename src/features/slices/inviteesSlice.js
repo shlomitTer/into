@@ -52,7 +52,6 @@ export const inviteesSlice = createSlice({
     currentUserInvitations: [],
     status: null,
     errors: null
-
   },
   reducers: {
   },
@@ -73,7 +72,6 @@ export const inviteesSlice = createSlice({
         state.status = "failed";
       })
 
-
       .addCase(getCurrentUserInvitations.pending, (state, action) => {
         state.status = "loading";
       })
@@ -84,7 +82,6 @@ export const inviteesSlice = createSlice({
           state.status = "success";
           state.currentUserInvitations = action.payload;
         }
-
       })
       .addCase(getCurrentUserInvitations.rejected, (state, action) => {
         state.status = "failed";
@@ -98,13 +95,10 @@ export const inviteesSlice = createSlice({
         if (action.payload) {
           state.status = "success";
           state.errors = null
-
           state.currentEventInvitees.unshift(action.payload);
-
         }
       })
       .addCase(postNewinvitee.rejected, (state, action) => {
-        console.log(action);
         state.errors = action.error.code;
         state.status = "failed";
       })
@@ -115,12 +109,9 @@ export const inviteesSlice = createSlice({
       .addCase(cancleInvitation.fulfilled, (state, action) => {
         state.status = "success";
         state.errors = null
-
         state.currentEventInvitees = state.currentEventInvitees.filter((item) => (item._id !== action.payload))
-
       })
       .addCase(cancleInvitation.rejected, (state, action) => {
-        console.log(action);
         state.status = "failed";
       })
       .addCase(refusal.pending, (state, action) => {
@@ -130,15 +121,11 @@ export const inviteesSlice = createSlice({
 
         state.status = "success";
         state.errors = null
-
-        console.log(action.payload);
-
-        state.currentUserInvitations = state.currentUserInvitations.filter((item) => (item.email !== action.payload))
+        state.currentUserInvitations = state.currentUserInvitations.filter((item) => (item.event_id?._id !== action.payload))
       })
       .addCase(refusal.rejected, (state, action) => {
         state.status = "failed";
       })
-
 
       .addCase(approveInvitation.pending, (state, action) => {
         state.status = "loading";
@@ -146,18 +133,15 @@ export const inviteesSlice = createSlice({
       .addCase(approveInvitation.fulfilled, (state, action) => {
         state.status = "success";
         state.errors = null
-        console.log(action.payload);
         state.eventsByParticpant.unshift(action.payload);
 
       })
       .addCase(approveInvitation.rejected, (state, action) => {
         state.status = "failed";
       })
-
   }
 
 });
 
-// Action creators are generated for each case reducer function
 export const { approve } = inviteesSlice.actions;
 export default inviteesSlice.reducer
