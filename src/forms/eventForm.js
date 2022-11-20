@@ -70,7 +70,7 @@ export default function EventForm(props) {
         {errors.location && <small className='_error'>Enter valid location</small>}
         <div>
           <label className='_lable'>
-            <input type="checkbox" id='permission' name='permission' {...register('EditableByParticipants')} />
+            <input type="checkbox" id='permission' name='permission' defaultChecked={props.event.EditableByParticipants} {...register('EditableByParticipants')} />
             Allow participants to edit the event</label>
         </div>
 
