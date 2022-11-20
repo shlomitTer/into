@@ -21,7 +21,6 @@ export default function Home() {
   useEffect(() => {
     if (userErrorCode === 'ERR_BAD_REQUEST') {
       setError(userErrorCode)
-      console.log(error)
     }
     else if (userErrorCode === 'ERR_NETWORK') {
       toast.error('An error occurred')

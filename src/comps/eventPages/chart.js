@@ -31,7 +31,6 @@ export default function DoughnutChart() {
   }, [currentEventTasks])
 
   const taskWeighting = () => {
-    console.log('dashbord callback change status');
     let readyWeight = 0, inProgressWeight = 0, doneWeight = 0;
 
     for (let i = 0; i < currentEventTasks.length; i++) {
